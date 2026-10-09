@@ -1,38 +1,40 @@
-# Input v1 and interpretation
+# Вход v1 и интерпретация
 
-The authoritative [schema](../schemas/input-v1.schema.json) is bundled in the installed
-package. Start from [safe.json](../fixtures/safe.json) or [missing.json](../fixtures/missing.json).
-Never paste a raw provider export or token into this public repository.
+Нормативная [схема](../schemas/input-v1.schema.json) встроена в пакет.
+Начните с [safe.json](../fixtures/safe.json) или [missing.json](../fixtures/missing.json).
+Не вставляйте исходную выгрузку провайдера или токен в публичный репозиторий.
 
-Required root fields: schema_version=1, synthetic boolean, safe target_alias,
-policy (all five positive integer limits), checks (zero to ten supported IDs).
-Policy: max_age_hours, min_tls_days, min_retention_days, max_rpo_minutes,
-max_rto_minutes. These are owner-selected goals; examples are not universal policy.
-Each present check requires state, source, evidence_id, collected_at and facts.
+Обязательные поля корня: schema_version=1, synthetic boolean, безопасный target_alias,
+policy с пятью положительными целыми порогами, checks с 0–10 поддерживаемыми ID.
+Пороги: max_age_hours, min_tls_days, min_retention_days, max_rpo_minutes,
+max_rto_minutes. Их задаёт владелец; пример не является универсальной политикой.
+Каждая запись требует state, source, evidence_id, collected_at, facts.
 
-- state: observed / unsupported / not_run / error. Non-observed states require empty facts.
-- source: synthetic / operator / provider_export / lab. A synthetic document must
-  use only synthetic sources; a non-synthetic document cannot use synthetic sources.
-- evidence_id and target_alias: 1–64 ASCII alphanumeric/underscore/hyphen characters,
-  starting with alphanumeric. Use aliases, never secrets, IPs or account identifiers.
-- collected_at: timezone-aware ISO timestamp with T and seconds, optional fractional
-  seconds (up to six digits), Z or ±HH:MM offset. Future/stale timestamps are unknown.
-- facts: only the explicitly typed booleans and integer metrics in the schema.
-  Unknown fields, coercions such as "false", duplicate JSON keys and non-finite numbers fail.
-  JSON file maximum 1 MiB; input must be a regular file.
+- state: observed / unsupported / not_run / error. Не observed требует пустых facts.
+- source: synthetic / operator / provider_export / lab. Синтетический документ
+  использует только synthetic; реальный документ не может смешивать его с другими источниками.
+- evidence_id и target_alias: 1–64 ASCII-буквы/цифры/underscore/hyphen, первый символ
+  буквенно-цифровой. Только псевдонимы: не секреты, IP или ID аккаунта.
+- collected_at: ISO-время с T и секундами, часовым поясом Z или ±HH:MM и необязательной
+  дробью до 6 знаков. Будущее/устаревшее время даёт unknown.
+- facts: только перечисленные boolean и ограниченные целые метрики.
+  Неизвестные поля, строка "false", повторные ключи и бесконечные числа отклоняются.
+  Максимум 1 МиБ; вход — обычный файл.
 
-Missing required facts produce unknown unless a known unsafe fact already produces fail.
-Missing check = not_run; unsupported/error = unknown. An explicit disabled IPv6
-assertion excludes IPv6 deny-policy evaluation; omitted IPv6 capability is unknown.
-No rule treats missing evidence as pass. See [exact rule matrix](checks.md).
+Пропуск необходимых фактов даёт unknown, если известный небезопасный факт не даёт fail.
+Нет записи — not_run; unsupported/error — unknown. Явно выключенный IPv6 исключает
+оценку default_deny_v6; неизвестная возможность IPv6 даёт unknown. Пропуск не даёт pass.
+Предикаты приведены в [матрице](checks.md).
 
-`--at` fixes replay time for tests; it must not be used to conceal stale real evidence.
-Severity is potential impact if unsafe; a passing critical-severity rule is not a
-critical finding. Confidence is synthetic or supplied_evidence, never independent verification.
-Output includes only typed facts, evidence IDs, source/state/timestamps and explanations.
-Even aliases can contain sensitive identifiers: operator review is still mandatory.
+`--at` задаёт время воспроизведения, а не способ скрыть устаревшие реальные сведения.
+Риск (severity) отражает потенциальный ущерб; успешно пройденное critical-правило не является
+критической находкой. Достоверность (confidence) — synthetic или supplied_evidence, без независимой проверки.
+Вывод содержит типизированные факты, ID свидетельства, источник/состояние/время и пояснения.
+Псевдонимы также могут быть чувствительными: проверка владельца обязательна.
 
-Real use: privately normalize authorized owner observations to this schema, set
-synthetic=false and accurate source/time, store input outside checkout, run CLI with
-actual clock and --fail-on incomplete, review coverage and corroborate findings.
-This is an evidence assessment, not a direct provider/network test.
+Для реальной работы: частным образом нормализуйте разрешённые наблюдения в v1,
+задайте synthetic=false, честные source/time, храните вне checkout и запускайте
+с текущими часами и --fail-on incomplete. Проверьте пропуски и подтвердите находки.
+Это оценка свидетельств, а не непосредственный тест сети или провайдера.
+
+Корневой самостоятельный раздел: [CORE-CONTRACT.md](../CORE-CONTRACT.md).

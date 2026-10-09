@@ -1,23 +1,23 @@
-# GITHUB-OPSEC: VPS — design and MVP
+# GITHUB-OPSEC: VPS — проектирование и MVP
 
-The implemented MVP is an offline evidence auditor. Focus: external VPS exposure
-and provider control plane; guest Linux hardening belongs to a separate project.
-Real provider checks remain unverified until an authorized disposable lab exists.
+Реализован автономный аудитор переданных свидетельств. Основной охват — внешняя
+поверхность VPS и контрольная плоскость провайдера; укрепление гостевого Linux
+относится к отдельному проекту. Реальные проверки провайдера не выполнены.
 
-1. [Requirements](requirements.md)
-2. [Threat model](threat-model.md)
-3. [Architecture](architecture.md)
-4. [Check matrix](checks.md)
-5. [Disposable laboratory](lab.md)
-6. [Stack ADR](adr/0001-stack.md)
-7. [Environment and CI](environment.md)
-8. [MVP plan](mvp.md)
-9. [Input contract](input.md)
-10. [Release notes](release-notes.md)
-11. [Prepared PR description](pull-request.md)
+1. [Требования](requirements.md)
+2. [Модель угроз](threat-model.md)
+3. [Архитектура](architecture.md)
+4. [Матрица проверок](checks.md)
+5. [Одноразовая лаборатория](lab.md)
+6. [ADR выбора стека](adr/0001-stack.md)
+7. [Среда и CI](environment.md)
+8. [План MVP](mvp.md)
+9. [Контракт входа](input.md)
+10. [Заметки к выпуску](release-notes.md)
+11. [Подготовленное описание PR](pull-request.md)
 
-[Safe synthetic evidence](../fixtures/safe.json), [unsafe evidence](../fixtures/unsafe.json),
-[missing evidence](../fixtures/missing.json), [JSON Schema](../schemas/input-v1.schema.json)
-and [readable example report](../examples/unsafe-report.md) are public synthetic data.
-The older [synthetic report sketch](../fixtures/synthetic-audit.json) is historical
-pre-implementation documentation; it is not valid CLI input.
+[Безопасные синтетические данные](../fixtures/safe.json),
+[небезопасные данные](../fixtures/unsafe.json), [пустой набор](../fixtures/missing.json),
+[JSON Schema](../schemas/input-v1.schema.json) и [читаемый отчёт](../examples/unsafe-report.md)
+содержат только синтетические сведения. [Ранний эскиз отчёта](../fixtures/synthetic-audit.json)
+сохраняется как историческая документация; это не допустимый вход CLI.

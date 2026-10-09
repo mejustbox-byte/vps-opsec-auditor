@@ -4,12 +4,13 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "vps-opsec-auditor"
-version = "0.1.0a1"
-description = "Offline read-only VPS exposure and provider-control-plane evidence auditor"
+version = "0.1.0a2"
+description = "Автономный аудитор свидетельств о внешней поверхности VPS и контрольной плоскости провайдера"
 readme = "README.md"
 requires-python = ">=3.12"
 license = "MIT"
-authors = [{name = "vps-opsec-auditor contributors"}]
+license-files = ["LICENSE", "LICENSE.ru.md"]
+authors = [{name = "участники vps-opsec-auditor"}]
 dependencies = []
 
 [project.scripts]

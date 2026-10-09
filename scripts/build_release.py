@@ -1,24 +1,25 @@
-"""Build the pinned wheel, deterministic public source bundle and checksums."""
+"""Сборка wheel, детерминированного исходного архива и контрольных сумм."""
 import gzip
 import hashlib
 import os
 from pathlib import Path
 import tarfile
+import tomllib
 import setuptools
 from setuptools.build_meta import build_wheel
 
 ROOT = Path(__file__).resolve().parents[1]
 os.chdir(ROOT)
 if setuptools.__version__ != '80.9.0':
-    raise SystemExit('Install requirements-build.txt with --require-hashes first')
+    raise SystemExit('Сначала установите requirements-build.txt с --require-hashes')
 os.environ['SOURCE_DATE_EPOCH'] = '1791504000'
 DIST = ROOT / 'dist'
 DIST.mkdir(exist_ok=True)
 wheel = build_wheel(str(DIST))
-version = '0.1.0a1'
+version = tomllib.loads((ROOT / 'pyproject.toml').read_text())['project']['version']
 name = f'vps_opsec_auditor-{version}'
 archive = DIST / f'{name}.tar.gz'
-paths = [ROOT / p for p in ['README.md', 'LICENSE', 'pyproject.toml', 'requirements-build.txt', '.gitignore']]
+paths = list(ROOT.glob('*.md')) + [ROOT / p for p in ['LICENSE', 'pyproject.toml', 'requirements-build.txt', '.gitignore']]
 for directory in ['src', 'tests', 'docs', 'schemas', 'fixtures', 'examples', 'scripts', '.github']:
     paths += [p for p in (ROOT / directory).rglob('*') if p.is_file()
               and '__pycache__' not in p.parts and not any(part.endswith('.egg-info') for part in p.parts)
@@ -35,4 +36,4 @@ with archive.open('wb') as raw:
                     tar.addfile(info, handle)
 artifacts = [DIST / wheel, archive]
 (DIST / 'SHA256SUMS').write_text(''.join(f'{hashlib.sha256(p.read_bytes()).hexdigest()}  {p.name}\n' for p in artifacts))
-print('Built wheel, source bundle and SHA256SUMS; no infrastructure validation claimed.')
+print('Собраны wheel, исходный архив и SHA256SUMS; инфраструктура не проверялась.')

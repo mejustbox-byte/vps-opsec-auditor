@@ -2,6 +2,8 @@ import copy
 from datetime import datetime, timezone
 import json
 import os
+import re
+import tomllib
 from pathlib import Path
 import socket
 import subprocess
@@ -77,7 +79,7 @@ class RuleTests(unittest.TestCase):
         data['checks']['SSH-01']['facts'] = {'password_auth': True}
         finding = audit(checked(data), NOW)['findings'][1]
         self.assertEqual(finding['status'], 'fail')
-        self.assertIn('incomplete', finding['reason'])
+        self.assertIn('отсутствует часть', finding['reason'])
 
     def test_ipv6_gap_and_disabled(self):
         for enabled, deny, expected in [(True, False, 'fail'), (True, None, 'unknown'),
@@ -165,7 +167,7 @@ class ValidationTests(unittest.TestCase):
             item['source'] = 'operator'
         report = audit(checked(data), NOW)
         self.assertEqual(report['findings'][0]['confidence'], 'supplied_evidence')
-        self.assertIn('not independently verified', report['limitations'][1])
+        self.assertIn('независимо не проверены', report['limitations'][1])
 
     def test_packaged_schema_matches_public_schema(self):
         self.assertEqual((ROOT / 'schemas/input-v1.schema.json').read_bytes(),
@@ -184,8 +186,8 @@ class CLITests(unittest.TestCase):
         self.assertEqual(json.loads(result.stdout)['summary']['pass'], 10)
         result = self.run_cli('fixtures/unsafe.json', '--fail-on', 'fail', *common)
         self.assertEqual(result.returncode, 1)
-        self.assertIn('synthetic: true', result.stdout)
-        self.assertIn('Recommendation:', result.stdout)
+        self.assertIn('Синтетические данные: true', result.stdout)
+        self.assertIn('Рекомендация:', result.stdout)
         result = self.run_cli('fixtures/missing.json', '--fail-on', 'incomplete', *common)
         self.assertEqual(result.returncode, 1)
         self.assertIn('not_run=10', result.stdout)
@@ -225,6 +227,30 @@ class CLITests(unittest.TestCase):
             fifo = Path(directory) / 'fifo'
             os.mkfifo(fifo)
             self.assertEqual(self.run_cli(fifo).returncode, 2)
+
+    def test_russian_help_report_and_version(self):
+        from vps_opsec_auditor import __version__
+        help_result = self.run_cli('--help')
+        self.assertEqual(help_result.returncode, 0)
+        for text in ['Использование:', 'Позиционные аргументы:', 'Параметры:', 'показать справку']:
+            self.assertIn(text, help_result.stdout)
+        self.assertNotIn('usage:', help_result.stdout)
+        report = audit(checked(fixture()), NOW)
+        for finding in report['findings']:
+            for key in ['title', 'reason', 'remediation']:
+                self.assertRegex(finding[key], r'[А-Яа-яЁё]')
+        metadata = tomllib.loads((ROOT / 'pyproject.toml').read_text())
+        self.assertEqual(metadata['project']['version'], __version__)
+        schema = json.loads((ROOT / 'schemas/input-v1.schema.json').read_text())
+        self.assertRegex(schema['title'], r'[А-Яа-яЁё]')
+        self.assertRegex(schema['description'], r'[А-Яа-яЁё]')
+
+    def test_argument_errors_are_russian_and_do_not_echo_values(self):
+        result = self.run_cli('--unknown', 'SYNTHETIC_SENTINEL_DO_NOT_ECHO')
+        self.assertEqual(result.returncode, 2)
+        self.assertIn('ошибка: неверные аргументы', result.stderr)
+        self.assertNotIn('SYNTHETIC_SENTINEL', result.stderr)
+        self.assertEqual(result.stdout, '')
 
     def test_examples_are_reproducible(self):
         result = self.run_cli('fixtures/safe.json', '--at', '2026-10-09T01:00:00Z', '--format', 'json')
