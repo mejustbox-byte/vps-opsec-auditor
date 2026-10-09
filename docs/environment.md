@@ -1,0 +1,44 @@
+# Development environment and CI
+
+Managed runtime is running/connected. The initial checkout was clean on branch work
+at main commit 1b5005ea6b899b9ae2cdba4443e504de4d234a10, with only README tracked.
+Prepared docs/fixtures/scripts were untracked and preserved/updated for implementation.
+No AGENTS.md was found in the workspace.
+
+## Required workflow
+Python 3.12+, POSIX, git. Runtime has no third-party dependencies and no services.
+Run `bash scripts/setup_environment.sh` from the checkout. It creates .venv,
+installs `requirements-build.txt` with --require-hashes, installs the project with
+--no-build-isolation --no-deps, then runs tests/docs/public-data/installed CLI smoke.
+It works without a saved virtual environment and is repeatable. No shell activation required. Tests use unittest with PYTHONPATH=src.
+Check docs/public data; build via `scripts/build_release.py`; install resulting wheel
+into a separate clean venv with --no-index --no-deps and run a synthetic audit.
+No provider tokens, cloud resources or new audit destinations are needed.
+
+## CI and release evidence
+CI runs pinned checkout/setup-python, pinned build dependencies, docs/public-data
+checks, unit/integration tests, wheel/source build, checksum-pinned gitleaks scan, clean installation and synthetic
+smoke test. Contents permission is read; no provider secrets or report artifacts.
+Remote CI/PR/release status must be reported from actual GitHub outcomes, not inferred
+from local tests. First release is prerelease while real platform checks are unperformed.
+API access and Git proxy authorization are separate capabilities; a working ls-remote
+is not proof of PR/merge/release permission. Publication blockers are recorded in the
+final execution report, not disguised as completed release work.
+
+## Reusable cloud startup
+Use the existing isolated checkout; no worktree unless explicitly requested. Inspect
+status and docs before work. Preserve credentials/proxy/CA configuration. Rerun tests
+and installed CLI smoke after restoring a snapshot. Prior docs-only scope is superseded
+by the current user's explicit implementation/commit/push/PR/merge/release authorization.
+Public data remains synthetic; no paid resources, real credentials or arbitrary scans.
+
+## Managed environment draft
+install_script: `set -euo pipefail; cd /workspace/vps-opsec-auditor; bash scripts/setup_environment.sh`.
+start_skill: inspect this checkout, run the setup script if .venv is absent, then tests
+and installed CLI smoke as documented above; no services or credentials required.
+The prior docs-only instructions are replaced. No onboarding directory is used.
+API domains api.github.com/uploads.github.com may be added to the existing package-manager
+preset through the draft. No credentials are added or revealed. Saving is not runtime
+application or environment publication. Git push works independently of API authorization.
+The first pushed implementation commit's CI run was observed as Success on the public
+GitHub Actions page (run 37923261896); later commits require their own run verification.

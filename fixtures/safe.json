@@ -1,0 +1,127 @@
+{
+  "schema_version": 1,
+  "synthetic": true,
+  "target_alias": "disposable-example",
+  "policy": {
+    "max_age_hours": 24,
+    "min_tls_days": 30,
+    "min_retention_days": 7,
+    "max_rpo_minutes": 60,
+    "max_rto_minutes": 120
+  },
+  "checks": {
+    "NET-01": {
+      "state": "observed",
+      "source": "synthetic",
+      "evidence_id": "net-01",
+      "collected_at": "2026-10-09T00:00:00Z",
+      "facts": {
+        "unexpected_ports": 0,
+        "public_admin_panel": false
+      }
+    },
+    "SSH-01": {
+      "state": "observed",
+      "source": "synthetic",
+      "evidence_id": "ssh-01",
+      "collected_at": "2026-10-09T00:00:00Z",
+      "facts": {
+        "password_auth": false,
+        "root_login": false,
+        "weak_algorithms": false
+      }
+    },
+    "FW-01": {
+      "state": "observed",
+      "source": "synthetic",
+      "evidence_id": "fw-01",
+      "collected_at": "2026-10-09T00:00:00Z",
+      "facts": {
+        "attached": true,
+        "default_deny_v4": true,
+        "ipv6_enabled": true,
+        "default_deny_v6": true,
+        "world_open_admin": false
+      }
+    },
+    "IAM-01": {
+      "state": "observed",
+      "source": "synthetic",
+      "evidence_id": "iam-01",
+      "collected_at": "2026-10-09T00:00:00Z",
+      "facts": {
+        "least_privilege": true,
+        "tokens_expire": true,
+        "rotation_policy": true,
+        "shared_tokens": false
+      }
+    },
+    "MFA-01": {
+      "state": "observed",
+      "source": "synthetic",
+      "evidence_id": "mfa-01",
+      "collected_at": "2026-10-09T00:00:00Z",
+      "facts": {
+        "all_admins_mfa": true,
+        "recovery_isolated": true
+      }
+    },
+    "META-01": {
+      "state": "observed",
+      "source": "synthetic",
+      "evidence_id": "meta-01",
+      "collected_at": "2026-10-09T00:00:00Z",
+      "facts": {
+        "user_data_contains_secrets": false,
+        "metadata_protected": true
+      }
+    },
+    "DNS-01": {
+      "state": "observed",
+      "source": "synthetic",
+      "evidence_id": "dns-01",
+      "collected_at": "2026-10-09T00:00:00Z",
+      "facts": {
+        "records_match_inventory": true,
+        "dangling_records": false
+      }
+    },
+    "TLS-01": {
+      "state": "observed",
+      "source": "synthetic",
+      "evidence_id": "tls-01",
+      "collected_at": "2026-10-09T00:00:00Z",
+      "facts": {
+        "identity_valid": true,
+        "chain_valid": true,
+        "days_remaining": 90,
+        "weak_protocols": false
+      }
+    },
+    "BAK-01": {
+      "state": "observed",
+      "source": "synthetic",
+      "evidence_id": "bak-01",
+      "collected_at": "2026-10-09T00:00:00Z",
+      "facts": {
+        "scheduled": true,
+        "retention_days": 30,
+        "encrypted": true,
+        "isolated": true,
+        "immutable": true
+      }
+    },
+    "REC-01": {
+      "state": "observed",
+      "source": "synthetic",
+      "evidence_id": "rec-01",
+      "collected_at": "2026-10-09T00:00:00Z",
+      "facts": {
+        "restore_tested": true,
+        "restore_success": true,
+        "rpo_minutes": 30,
+        "rto_minutes": 60
+      }
+    }
+  }
+}
