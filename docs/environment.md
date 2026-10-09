@@ -43,3 +43,16 @@ application or environment publication. Git push works independently of API auth
 GitHub API access subsequently became available through the normal gh CLI.
 PR #1 and commit d8ddb6a were verified through gh; push run 37923541901 and PR run
 37923547213 both completed successfully. Later commits require their own CI verification.
+
+## Release publication through Actions
+`.github/workflows/release.yml` is manually dispatched from main for the existing
+v0.1.0a1 draft (ID 407850186), with immutable source commit
+069c2e93fc85fb45bc997f95e00730cef036a1c3. The tag is never moved or recreated.
+A read-only job checks tag/commit ancestry, runs tests/secret scan, builds twice,
+checks reproducibility and tests the installed wheel. A separate job has only
+contents:write and uses the standard job GITHUB_TOKEN to upload assets to the existing
+draft. It checks tag identity, downloads and compares all assets/checksums before
+publishing prerelease, then verifies published state. It does not create another release.
+No user credentials or provider operations are involved. Unexpected existing assets,
+identity mismatches or differing files stop publication. The workflow is specific to
+this first release; a future version needs a reviewed update to its fixed constants.
