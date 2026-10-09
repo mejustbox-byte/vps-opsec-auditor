@@ -40,5 +40,6 @@ The prior docs-only instructions are replaced. No onboarding directory is used.
 API domains api.github.com/uploads.github.com may be added to the existing package-manager
 preset through the draft. No credentials are added or revealed. Saving is not runtime
 application or environment publication. Git push works independently of API authorization.
-The first pushed implementation commit's CI run was observed as Success on the public
-GitHub Actions page (run 37923261896); later commits require their own run verification.
+GitHub API access subsequently became available through the normal gh CLI.
+PR #1 and commit d8ddb6a were verified through gh; push run 37923541901 and PR run
+37923547213 both completed successfully. Later commits require their own CI verification.

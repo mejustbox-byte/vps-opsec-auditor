@@ -1,4 +1,4 @@
-# v0.1.0a1 — offline MVP prerelease candidate
+# v0.1.0a1 — offline MVP prerelease
 
 Adds strict sanitized JSON evidence schema, ten offline posture rules, JSON/Markdown
 reports, pass/fail/unknown/not_run semantics, freshness/policy gates and private
@@ -21,3 +21,13 @@ and source-bundle installation, identical repeated artifact checksums, documenta
 links, targeted public-data checks and gitleaks 8.24.3 (no leaks found).
 Remote CI and release publication must be confirmed from the actual run/release.
 Only Python 3.12 on POSIX is locally validated; versions 3.13+ are not independently tested.
+
+## Confirmed GitHub CI before release
+For commit `d8ddb6a136a909a92ad381c7dad63b3416383a95`, both
+[push CI](https://github.com/mejustbox-byte/vps-opsec-auditor/actions/runs/37923541901)
+and [PR CI](https://github.com/mejustbox-byte/vps-opsec-auditor/actions/runs/37923547213)
+completed with **success**. The jobs include fresh setup from checkout, 17 offline
+unit/integration tests, docs/public-data checks, build, checksum-pinned gitleaks scan
+and clean wheel installation smoke. [PR #1](https://github.com/mejustbox-byte/vps-opsec-auditor/pull/1)
+is the only implementation PR. Follow-up commits must pass their own CI before merge;
+the release publication records the final merge/run identifiers.

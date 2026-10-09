@@ -23,7 +23,9 @@ def main():
         require(p.is_file() and len(p.read_text().strip()) > 100, f"missing/empty {name}")
     for p in (ROOT / "docs").rglob("*.md"):
         for link in re.findall(r"\[[^\]]+\]\(([^)]+)\)", p.read_text()):
-            require("://" not in link, f"unexpected external link: {p.name}")
+            if "://" in link:
+                require(link.startswith("https://github.com/mejustbox-byte/vps-opsec-auditor/"), f"unexpected external link: {p.name}")
+                continue
             require((p.parent / link.split("#")[0]).is_file(), f"broken link: {link}")
     matrix = (ROOT / "docs/checks.md").read_text()
     require(set(re.findall(r"\b[A-Z]+-\d{2}\b", matrix)) == IDS, "matrix IDs mismatch")

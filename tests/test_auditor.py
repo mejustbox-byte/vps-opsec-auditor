@@ -144,6 +144,7 @@ class ValidationTests(unittest.TestCase):
                    (['checks', 'NET-01', 'collected_at'], '2026-10-09T00:00:00'),
                    (['checks', 'NET-01', 'collected_at'], '2026-10-09\n00:00:00Z'),
                    (['checks', 'NET-01', 'collected_at'], '2026-02-30T00:00:00Z'),
+                   (['checks', 'NET-01', 'collected_at'], '2026-10-09T00:00:00+00:60'),
                    (['checks', 'NET-01', 'source'], 'provider_export'),
                    (['checks', 'NET-01', 'state'], 'pass'),
                    (['checks', 'NET-01', 'state'], 'not_run')]
