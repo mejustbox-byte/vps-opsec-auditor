@@ -14,6 +14,7 @@ Real provider checks remain unverified until an authorized disposable lab exists
 8. [MVP plan](mvp.md)
 9. [Input contract](input.md)
 10. [Release notes](release-notes.md)
+11. [Prepared PR description](pull-request.md)
 
 [Safe synthetic evidence](../fixtures/safe.json), [unsafe evidence](../fixtures/unsafe.json),
 [missing evidence](../fixtures/missing.json), [JSON Schema](../schemas/input-v1.schema.json)

@@ -21,7 +21,8 @@ the full check also expects the source archive. Checksums detect corruption, not
 publisher identity. Obtain artifacts/checksums through a trusted release channel.
 The executable is installed inside the virtual environment; activation is optional.
 
-From this checkout (no runtime dependencies):
+From this checkout (no runtime dependencies), `bash scripts/setup_environment.sh`
+performs installation and validation without a saved virtual environment. For installation only:
 
 ```sh
 python3 -m venv .venv
