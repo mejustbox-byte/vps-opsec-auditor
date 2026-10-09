@@ -1,58 +1,9 @@
-# Среда разработки, CI и выпуск
+# Development Environment
 
-Используется существующий изолированный checkout `/workspace/vps-opsec-auditor`.
-Изначально на main `1b5005ea6b899b9ae2cdba4443e504de4d234a10` был только README;
-подготовленные документы сохранены и обновлены. AGENTS.md в workspace не найден.
+Use a clean checkout and the runtime version declared by the project. Install
+dependencies using [INSTALL.md](../INSTALL.md), then run the checks listed in
+[CONTRIBUTING.md](../CONTRIBUTING.md) and CI.
 
-## Установка и проверки
-Нужны Python 3.12+, POSIX, git. Runtime-зависимостей и сервисов нет.
-Из checkout выполните `bash scripts/setup_environment.sh`: создаётся `.venv`,
-устанавливается закреплённый хешем setuptools, затем пакет с --no-build-isolation
---no-deps, проверяются зависимости, модульные/интеграционные тесты, документы, публичные
-данные и установленный CLI. Сохранённый venv не требуется; повторный запуск проверен.
-Команды из [README](../README.md) выполняются без активации оболочки.
-
-`install_script` среды:
-
-```sh
-set -euo pipefail
-cd /workspace/vps-opsec-auditor
-bash scripts/setup_environment.sh
-```
-
-`start_skill`: прочитать документы/статус, воспроизвести установку и проверки этой
-командой; использовать `.venv/bin/vps-opsec-auditor`; сервисы не запускать.
-Данные только синтетические, реальные учётные данные провайдера не нужны.
-Сохранение draft не применяет настройки runtime и не публикует snapshot среды.
-
-## CI и подтверждённый первый выпуск
-CI: закреплённые actions, установка из checkout, тесты, документы/публичные данные,
-сборка, gitleaks с проверкой хеша и чистая установка wheel. Права CI — contents:read.
-[CI продукта](https://github.com/mejustbox-byte/vps-opsec-auditor/actions/runs/37923861951)
-для `069c2e93fc85fb45bc997f95e00730cef036a1c3` успешен.
-[CI workflow main](https://github.com/mejustbox-byte/vps-opsec-auditor/actions/runs/37925368402)
-и [публикация 0.1.0a1](https://github.com/mejustbox-byte/vps-opsec-auditor/actions/runs/37925383868)
-успешны; оба задача сборки/публикации выполнены. [Выпуск 0.1.0a1](https://github.com/mejustbox-byte/vps-opsec-auditor/releases/tag/v0.1.0a1)
-сохранён. Его 3 assets скачаны, SHA256 и содержимое проверены, wheel установлен отдельно.
-Git-чтение, API, push и загрузка assets — разные возможности; локальный upload дал
-401, публикация выполнена штатным GITHUB_TOKEN в Actions без новых учётные данные.
-
-## Новый выпуск 0.1.0a2
-release.yml запускается вручную из main с `commit` и `release_id`; tag — v0.1.0a2.
-Сначала создать tag на финальном main после успешного CI и отдельный draft с русскими
-notes. Указать точный SHA и ID этого draft; не использовать ID старого выпуска.
-Задача сборки имеет только contents:read, проверяет tag/commit/принадлежность main,
-запускает тесты/gitleaks, собирает дважды и проверяет установленный wheel.
-Только отдельный задача публикации имеет contents:write и стандартный GITHUB_TOKEN.
-Он проверяет существующий draft, файлы и tag, загружает 3 assets, скачивает их,
-сверяет SHA256/содержимое, публикует prerelease и повторно проверяет состояние.
-Release не дублируется, tag не передвигается. Для следующей версии нужен проверенный PR.
-
-## Возобновление работы
-Сохранить пользовательские изменения, использовать текущий checkout без worktree,
-если он не запрошен явно. Сохранить proxy/CA и штатную аутентификацию; не раскрывать
-секреты и не обходить ограничения. После восстановления snapshot повторить установку
-и тесты. Все реальные провайдера/сети/metadata/резервных копий/восстановления проверки не выполнены.
-Публикация среды и выпуск продукта — отдельные операции.
-
-Корневой самостоятельный раздел: [CLOUD-DEVELOPMENT.md](../CLOUD-DEVELOPMENT.md).
+Keep provider credentials, account exports, and customer data outside the
+source tree. Validate provider-specific behavior only in a separate authorized
+test account; synthetic fixtures do not establish live provider behavior.

@@ -1,31 +1,11 @@
-# Разработка в облачной среде
+# Development Environment
 
-## Воспроизводимая подготовка
-Используйте `/workspace/vps-opsec-auditor`, осмотрите git status и текущие инструкции.
-Изолированная среда уже существует: отдельный worktree без запроса не нужен.
+Use a clean checkout of the default branch and the runtime version declared in
+`pyproject.toml` or `.python-version`. Install the project and development
+dependencies with the commands documented in [INSTALL.md](INSTALL.md), then run
+the checks listed in [CONTRIBUTING.md](CONTRIBUTING.md) and the repository's CI.
 
-```sh
-cd /workspace/vps-opsec-auditor
-bash scripts/setup_environment.sh
-```
-
-Команда не зависит от сохранённого venv и повторно проверяет установку/тесты/CLI.
-Зависимость сборки скачивается с PyPI с проверкой хеша и TLS. Нет необходимых
-provider secrets или сервисов. Не печатайте значения окружения/credentials;
-используйте внедрённый Git/GitHub доступ без замены или извлечения токенов.
-
-## Сохранение, публикация, восстановление
-install_script сохраняет эту команду, start_skill — чтение документов и её запуск.
-Сохранённый draft не исполняет скрипт и не публикует среду. Публикация snapshot
-выполняется интерфейсом продукта. После восстановления новой задачи осмотрите
-checkout/статус и повторите установку и smoke; живые процессы/соединения не сохраняются.
-Это отдельно от commit/push/PR/merge/release продукта.
-
-## Сеть и выпуск
-Git proxy и GitHub API/upload имеют разные права. Для первого выпуска локальный
-uploads.github.com вернул 401; штатный Actions GITHUB_TOKEN решил публикацию.
-Не добавляйте credentials и не обходите аутентификацию. Release job имеет только
-contents:write; сборка/CI — contents:read. Domains API/upload можно сохранить через
-draft с сохранением известных других правил, но это не доказательство применения.
-[Детали среды](docs/environment.md), [контроль выпуска](RELEASE-CHECKLIST.md).
-Никаких платных ресурсов, произвольных сканирований или real exports в git.
+Keep credentials, customer data, production exports, and generated reports
+outside the source tree. A passing local or CI check validates only the checks
+it runs; platform-specific behavior and deployment require separate documented
+validation.
