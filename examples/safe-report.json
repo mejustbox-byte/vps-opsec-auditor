@@ -1,0 +1,231 @@
+{
+  "schema_version": 1,
+  "auditor_version": "0.1.0a1",
+  "mode": "offline",
+  "synthetic": true,
+  "target_alias": "disposable-example",
+  "evaluated_at": "2026-10-09T01:00:00+00:00",
+  "policy": {
+    "max_age_hours": 24,
+    "min_tls_days": 30,
+    "min_retention_days": 7,
+    "max_rpo_minutes": 60,
+    "max_rto_minutes": 120
+  },
+  "summary": {
+    "pass": 10,
+    "fail": 0,
+    "unknown": 0,
+    "not_run": 0
+  },
+  "limitations": [
+    "No network or provider API checks were performed.",
+    "Evidence is supplied, not independently verified.",
+    "A pass applies only to this rule, evidence and configured policy."
+  ],
+  "findings": [
+    {
+      "check_id": "NET-01",
+      "title": "Public ports and panels",
+      "status": "pass",
+      "severity": "high",
+      "confidence": "synthetic",
+      "reason": "Supplied evidence meets this rule and configured policy; not an infrastructure guarantee.",
+      "evidence": {
+        "source": "synthetic",
+        "evidence_id": "net-01",
+        "collected_at": "2026-10-09T00:00:00Z",
+        "state": "observed",
+        "facts": {
+          "unexpected_ports": 0,
+          "public_admin_panel": false
+        }
+      },
+      "remediation": "Restrict administrative exposure and remove unexpected ports."
+    },
+    {
+      "check_id": "SSH-01",
+      "title": "SSH authentication and algorithms",
+      "status": "pass",
+      "severity": "high",
+      "confidence": "synthetic",
+      "reason": "Supplied evidence meets this rule and configured policy; not an infrastructure guarantee.",
+      "evidence": {
+        "source": "synthetic",
+        "evidence_id": "ssh-01",
+        "collected_at": "2026-10-09T00:00:00Z",
+        "state": "observed",
+        "facts": {
+          "password_auth": false,
+          "root_login": false,
+          "weak_algorithms": false
+        }
+      },
+      "remediation": "Disable password/root login and retire weak SSH algorithms."
+    },
+    {
+      "check_id": "FW-01",
+      "title": "Cloud firewall and IPv6",
+      "status": "pass",
+      "severity": "critical",
+      "confidence": "synthetic",
+      "reason": "Supplied evidence meets this rule and configured policy; not an infrastructure guarantee.",
+      "evidence": {
+        "source": "synthetic",
+        "evidence_id": "fw-01",
+        "collected_at": "2026-10-09T00:00:00Z",
+        "state": "observed",
+        "facts": {
+          "attached": true,
+          "default_deny_v4": true,
+          "ipv6_enabled": true,
+          "default_deny_v6": true,
+          "world_open_admin": false
+        }
+      },
+      "remediation": "Attach a default-deny firewall to both address families and restrict admin ingress."
+    },
+    {
+      "check_id": "IAM-01",
+      "title": "Provider IAM and API tokens",
+      "status": "pass",
+      "severity": "critical",
+      "confidence": "synthetic",
+      "reason": "Supplied evidence meets this rule and configured policy; not an infrastructure guarantee.",
+      "evidence": {
+        "source": "synthetic",
+        "evidence_id": "iam-01",
+        "collected_at": "2026-10-09T00:00:00Z",
+        "state": "observed",
+        "facts": {
+          "least_privilege": true,
+          "tokens_expire": true,
+          "rotation_policy": true,
+          "shared_tokens": false
+        }
+      },
+      "remediation": "Use least privilege, expiring individual tokens and a rotation policy."
+    },
+    {
+      "check_id": "MFA-01",
+      "title": "Provider MFA and recovery",
+      "status": "pass",
+      "severity": "critical",
+      "confidence": "synthetic",
+      "reason": "Supplied evidence meets this rule and configured policy; not an infrastructure guarantee.",
+      "evidence": {
+        "source": "synthetic",
+        "evidence_id": "mfa-01",
+        "collected_at": "2026-10-09T00:00:00Z",
+        "state": "observed",
+        "facts": {
+          "all_admins_mfa": true,
+          "recovery_isolated": true
+        }
+      },
+      "remediation": "Enable MFA for every administrator and isolate recovery channels."
+    },
+    {
+      "check_id": "META-01",
+      "title": "Cloud-init and metadata",
+      "status": "pass",
+      "severity": "high",
+      "confidence": "synthetic",
+      "reason": "Supplied evidence meets this rule and configured policy; not an infrastructure guarantee.",
+      "evidence": {
+        "source": "synthetic",
+        "evidence_id": "meta-01",
+        "collected_at": "2026-10-09T00:00:00Z",
+        "state": "observed",
+        "facts": {
+          "user_data_contains_secrets": false,
+          "metadata_protected": true
+        }
+      },
+      "remediation": "Remove secrets from user-data and restrict metadata access inside the guest."
+    },
+    {
+      "check_id": "DNS-01",
+      "title": "DNS ownership and inventory",
+      "status": "pass",
+      "severity": "high",
+      "confidence": "synthetic",
+      "reason": "Supplied evidence meets this rule and configured policy; not an infrastructure guarantee.",
+      "evidence": {
+        "source": "synthetic",
+        "evidence_id": "dns-01",
+        "collected_at": "2026-10-09T00:00:00Z",
+        "state": "observed",
+        "facts": {
+          "records_match_inventory": true,
+          "dangling_records": false
+        }
+      },
+      "remediation": "Reconcile DNS records with inventory and remove dangling references."
+    },
+    {
+      "check_id": "TLS-01",
+      "title": "TLS identity and lifetime",
+      "status": "pass",
+      "severity": "high",
+      "confidence": "synthetic",
+      "reason": "Supplied evidence meets this rule and configured policy; not an infrastructure guarantee.",
+      "evidence": {
+        "source": "synthetic",
+        "evidence_id": "tls-01",
+        "collected_at": "2026-10-09T00:00:00Z",
+        "state": "observed",
+        "facts": {
+          "identity_valid": true,
+          "chain_valid": true,
+          "days_remaining": 90,
+          "weak_protocols": false
+        }
+      },
+      "remediation": "Correct the certificate identity/chain, renew it and disable weak protocols."
+    },
+    {
+      "check_id": "BAK-01",
+      "title": "Backup protection",
+      "status": "pass",
+      "severity": "critical",
+      "confidence": "synthetic",
+      "reason": "Supplied evidence meets this rule and configured policy; not an infrastructure guarantee.",
+      "evidence": {
+        "source": "synthetic",
+        "evidence_id": "bak-01",
+        "collected_at": "2026-10-09T00:00:00Z",
+        "state": "observed",
+        "facts": {
+          "scheduled": true,
+          "retention_days": 30,
+          "encrypted": true,
+          "isolated": true,
+          "immutable": true
+        }
+      },
+      "remediation": "Schedule encrypted, isolated, immutable backups with sufficient retention."
+    },
+    {
+      "check_id": "REC-01",
+      "title": "Restore and recovery objectives",
+      "status": "pass",
+      "severity": "critical",
+      "confidence": "synthetic",
+      "reason": "Supplied evidence meets this rule and configured policy; not an infrastructure guarantee.",
+      "evidence": {
+        "source": "synthetic",
+        "evidence_id": "rec-01",
+        "collected_at": "2026-10-09T00:00:00Z",
+        "state": "observed",
+        "facts": {
+          "restore_tested": true,
+          "restore_success": true,
+          "rpo_minutes": 30,
+          "rto_minutes": 60
+        }
+      },
+      "remediation": "Test restoration in an isolated disposable lab and meet the agreed RPO/RTO."
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+[build-system]
+requires = ["setuptools==80.9.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "vps-opsec-auditor"
+version = "0.1.0a1"
+description = "Offline read-only VPS exposure and provider-control-plane evidence auditor"
+readme = "README.md"
+requires-python = ">=3.12"
+license = "MIT"
+authors = [{name = "vps-opsec-auditor contributors"}]
+dependencies = []
+
+[project.scripts]
+vps-opsec-auditor = "vps_opsec_auditor.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+vps_opsec_auditor = ["*.json"]

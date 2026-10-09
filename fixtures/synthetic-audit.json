@@ -1,0 +1,59 @@
+{
+  "synthetic": true,
+  "target_alias": "disposable-example",
+  "example_ipv4": "192.0.2.10",
+  "example_ipv6": "2001:db8::10",
+  "example_domain": "vps.example.invalid",
+  "findings": [
+    {
+      "check_id": "NET-01",
+      "status": "unverified",
+      "reason": "Synthetic contract only; no provider lab or real observation."
+    },
+    {
+      "check_id": "SSH-01",
+      "status": "unverified",
+      "reason": "Synthetic contract only; no provider lab or real observation."
+    },
+    {
+      "check_id": "FW-01",
+      "status": "unverified",
+      "reason": "Synthetic contract only; no provider lab or real observation."
+    },
+    {
+      "check_id": "IAM-01",
+      "status": "unverified",
+      "reason": "Synthetic contract only; no provider lab or real observation."
+    },
+    {
+      "check_id": "MFA-01",
+      "status": "unverified",
+      "reason": "Synthetic contract only; no provider lab or real observation."
+    },
+    {
+      "check_id": "META-01",
+      "status": "unverified",
+      "reason": "Synthetic contract only; no provider lab or real observation."
+    },
+    {
+      "check_id": "DNS-01",
+      "status": "unverified",
+      "reason": "Synthetic contract only; no provider lab or real observation."
+    },
+    {
+      "check_id": "TLS-01",
+      "status": "unverified",
+      "reason": "Synthetic contract only; no provider lab or real observation."
+    },
+    {
+      "check_id": "BAK-01",
+      "status": "unverified",
+      "reason": "Synthetic contract only; no provider lab or real observation."
+    },
+    {
+      "check_id": "REC-01",
+      "status": "unverified",
+      "reason": "Synthetic contract only; no provider lab or real observation."
+    }
+  ]
+}

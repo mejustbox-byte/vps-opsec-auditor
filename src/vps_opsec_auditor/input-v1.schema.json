@@ -1,0 +1,661 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Sanitized offline VPS audit evidence v1",
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "type": "integer",
+      "const": 1
+    },
+    "synthetic": {
+      "type": "boolean"
+    },
+    "target_alias": {
+      "type": "string",
+      "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_-]{0,63}$",
+      "maxLength": 64
+    },
+    "policy": {
+      "type": "object",
+      "properties": {
+        "max_age_hours": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 8760
+        },
+        "min_tls_days": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 365
+        },
+        "min_retention_days": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 36500
+        },
+        "max_rpo_minutes": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 5256000
+        },
+        "max_rto_minutes": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 5256000
+        }
+      },
+      "required": [
+        "max_age_hours",
+        "min_tls_days",
+        "min_retention_days",
+        "max_rpo_minutes",
+        "max_rto_minutes"
+      ],
+      "additionalProperties": false
+    },
+    "checks": {
+      "type": "object",
+      "properties": {
+        "NET-01": {
+          "type": "object",
+          "properties": {
+            "state": {
+              "type": "string",
+              "enum": [
+                "observed",
+                "unsupported",
+                "not_run",
+                "error"
+              ]
+            },
+            "source": {
+              "type": "string",
+              "enum": [
+                "synthetic",
+                "operator",
+                "provider_export",
+                "lab"
+              ]
+            },
+            "evidence_id": {
+              "type": "string",
+              "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_-]{0,63}$",
+              "maxLength": 64
+            },
+            "collected_at": {
+              "type": "string",
+              "format": "date-time",
+              "maxLength": 32
+            },
+            "facts": {
+              "type": "object",
+              "properties": {
+                "unexpected_ports": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 65535
+                },
+                "public_admin_panel": {
+                  "type": "boolean"
+                }
+              },
+              "required": [],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "state",
+            "source",
+            "evidence_id",
+            "collected_at",
+            "facts"
+          ],
+          "additionalProperties": false
+        },
+        "SSH-01": {
+          "type": "object",
+          "properties": {
+            "state": {
+              "type": "string",
+              "enum": [
+                "observed",
+                "unsupported",
+                "not_run",
+                "error"
+              ]
+            },
+            "source": {
+              "type": "string",
+              "enum": [
+                "synthetic",
+                "operator",
+                "provider_export",
+                "lab"
+              ]
+            },
+            "evidence_id": {
+              "type": "string",
+              "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_-]{0,63}$",
+              "maxLength": 64
+            },
+            "collected_at": {
+              "type": "string",
+              "format": "date-time",
+              "maxLength": 32
+            },
+            "facts": {
+              "type": "object",
+              "properties": {
+                "password_auth": {
+                  "type": "boolean"
+                },
+                "root_login": {
+                  "type": "boolean"
+                },
+                "weak_algorithms": {
+                  "type": "boolean"
+                }
+              },
+              "required": [],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "state",
+            "source",
+            "evidence_id",
+            "collected_at",
+            "facts"
+          ],
+          "additionalProperties": false
+        },
+        "FW-01": {
+          "type": "object",
+          "properties": {
+            "state": {
+              "type": "string",
+              "enum": [
+                "observed",
+                "unsupported",
+                "not_run",
+                "error"
+              ]
+            },
+            "source": {
+              "type": "string",
+              "enum": [
+                "synthetic",
+                "operator",
+                "provider_export",
+                "lab"
+              ]
+            },
+            "evidence_id": {
+              "type": "string",
+              "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_-]{0,63}$",
+              "maxLength": 64
+            },
+            "collected_at": {
+              "type": "string",
+              "format": "date-time",
+              "maxLength": 32
+            },
+            "facts": {
+              "type": "object",
+              "properties": {
+                "attached": {
+                  "type": "boolean"
+                },
+                "default_deny_v4": {
+                  "type": "boolean"
+                },
+                "ipv6_enabled": {
+                  "type": "boolean"
+                },
+                "default_deny_v6": {
+                  "type": "boolean"
+                },
+                "world_open_admin": {
+                  "type": "boolean"
+                }
+              },
+              "required": [],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "state",
+            "source",
+            "evidence_id",
+            "collected_at",
+            "facts"
+          ],
+          "additionalProperties": false
+        },
+        "IAM-01": {
+          "type": "object",
+          "properties": {
+            "state": {
+              "type": "string",
+              "enum": [
+                "observed",
+                "unsupported",
+                "not_run",
+                "error"
+              ]
+            },
+            "source": {
+              "type": "string",
+              "enum": [
+                "synthetic",
+                "operator",
+                "provider_export",
+                "lab"
+              ]
+            },
+            "evidence_id": {
+              "type": "string",
+              "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_-]{0,63}$",
+              "maxLength": 64
+            },
+            "collected_at": {
+              "type": "string",
+              "format": "date-time",
+              "maxLength": 32
+            },
+            "facts": {
+              "type": "object",
+              "properties": {
+                "least_privilege": {
+                  "type": "boolean"
+                },
+                "tokens_expire": {
+                  "type": "boolean"
+                },
+                "rotation_policy": {
+                  "type": "boolean"
+                },
+                "shared_tokens": {
+                  "type": "boolean"
+                }
+              },
+              "required": [],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "state",
+            "source",
+            "evidence_id",
+            "collected_at",
+            "facts"
+          ],
+          "additionalProperties": false
+        },
+        "MFA-01": {
+          "type": "object",
+          "properties": {
+            "state": {
+              "type": "string",
+              "enum": [
+                "observed",
+                "unsupported",
+                "not_run",
+                "error"
+              ]
+            },
+            "source": {
+              "type": "string",
+              "enum": [
+                "synthetic",
+                "operator",
+                "provider_export",
+                "lab"
+              ]
+            },
+            "evidence_id": {
+              "type": "string",
+              "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_-]{0,63}$",
+              "maxLength": 64
+            },
+            "collected_at": {
+              "type": "string",
+              "format": "date-time",
+              "maxLength": 32
+            },
+            "facts": {
+              "type": "object",
+              "properties": {
+                "all_admins_mfa": {
+                  "type": "boolean"
+                },
+                "recovery_isolated": {
+                  "type": "boolean"
+                }
+              },
+              "required": [],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "state",
+            "source",
+            "evidence_id",
+            "collected_at",
+            "facts"
+          ],
+          "additionalProperties": false
+        },
+        "META-01": {
+          "type": "object",
+          "properties": {
+            "state": {
+              "type": "string",
+              "enum": [
+                "observed",
+                "unsupported",
+                "not_run",
+                "error"
+              ]
+            },
+            "source": {
+              "type": "string",
+              "enum": [
+                "synthetic",
+                "operator",
+                "provider_export",
+                "lab"
+              ]
+            },
+            "evidence_id": {
+              "type": "string",
+              "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_-]{0,63}$",
+              "maxLength": 64
+            },
+            "collected_at": {
+              "type": "string",
+              "format": "date-time",
+              "maxLength": 32
+            },
+            "facts": {
+              "type": "object",
+              "properties": {
+                "user_data_contains_secrets": {
+                  "type": "boolean"
+                },
+                "metadata_protected": {
+                  "type": "boolean"
+                }
+              },
+              "required": [],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "state",
+            "source",
+            "evidence_id",
+            "collected_at",
+            "facts"
+          ],
+          "additionalProperties": false
+        },
+        "DNS-01": {
+          "type": "object",
+          "properties": {
+            "state": {
+              "type": "string",
+              "enum": [
+                "observed",
+                "unsupported",
+                "not_run",
+                "error"
+              ]
+            },
+            "source": {
+              "type": "string",
+              "enum": [
+                "synthetic",
+                "operator",
+                "provider_export",
+                "lab"
+              ]
+            },
+            "evidence_id": {
+              "type": "string",
+              "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_-]{0,63}$",
+              "maxLength": 64
+            },
+            "collected_at": {
+              "type": "string",
+              "format": "date-time",
+              "maxLength": 32
+            },
+            "facts": {
+              "type": "object",
+              "properties": {
+                "records_match_inventory": {
+                  "type": "boolean"
+                },
+                "dangling_records": {
+                  "type": "boolean"
+                }
+              },
+              "required": [],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "state",
+            "source",
+            "evidence_id",
+            "collected_at",
+            "facts"
+          ],
+          "additionalProperties": false
+        },
+        "TLS-01": {
+          "type": "object",
+          "properties": {
+            "state": {
+              "type": "string",
+              "enum": [
+                "observed",
+                "unsupported",
+                "not_run",
+                "error"
+              ]
+            },
+            "source": {
+              "type": "string",
+              "enum": [
+                "synthetic",
+                "operator",
+                "provider_export",
+                "lab"
+              ]
+            },
+            "evidence_id": {
+              "type": "string",
+              "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_-]{0,63}$",
+              "maxLength": 64
+            },
+            "collected_at": {
+              "type": "string",
+              "format": "date-time",
+              "maxLength": 32
+            },
+            "facts": {
+              "type": "object",
+              "properties": {
+                "identity_valid": {
+                  "type": "boolean"
+                },
+                "chain_valid": {
+                  "type": "boolean"
+                },
+                "days_remaining": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 36500
+                },
+                "weak_protocols": {
+                  "type": "boolean"
+                }
+              },
+              "required": [],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "state",
+            "source",
+            "evidence_id",
+            "collected_at",
+            "facts"
+          ],
+          "additionalProperties": false
+        },
+        "BAK-01": {
+          "type": "object",
+          "properties": {
+            "state": {
+              "type": "string",
+              "enum": [
+                "observed",
+                "unsupported",
+                "not_run",
+                "error"
+              ]
+            },
+            "source": {
+              "type": "string",
+              "enum": [
+                "synthetic",
+                "operator",
+                "provider_export",
+                "lab"
+              ]
+            },
+            "evidence_id": {
+              "type": "string",
+              "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_-]{0,63}$",
+              "maxLength": 64
+            },
+            "collected_at": {
+              "type": "string",
+              "format": "date-time",
+              "maxLength": 32
+            },
+            "facts": {
+              "type": "object",
+              "properties": {
+                "scheduled": {
+                  "type": "boolean"
+                },
+                "retention_days": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 36500
+                },
+                "encrypted": {
+                  "type": "boolean"
+                },
+                "isolated": {
+                  "type": "boolean"
+                },
+                "immutable": {
+                  "type": "boolean"
+                }
+              },
+              "required": [],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "state",
+            "source",
+            "evidence_id",
+            "collected_at",
+            "facts"
+          ],
+          "additionalProperties": false
+        },
+        "REC-01": {
+          "type": "object",
+          "properties": {
+            "state": {
+              "type": "string",
+              "enum": [
+                "observed",
+                "unsupported",
+                "not_run",
+                "error"
+              ]
+            },
+            "source": {
+              "type": "string",
+              "enum": [
+                "synthetic",
+                "operator",
+                "provider_export",
+                "lab"
+              ]
+            },
+            "evidence_id": {
+              "type": "string",
+              "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_-]{0,63}$",
+              "maxLength": 64
+            },
+            "collected_at": {
+              "type": "string",
+              "format": "date-time",
+              "maxLength": 32
+            },
+            "facts": {
+              "type": "object",
+              "properties": {
+                "restore_tested": {
+                  "type": "boolean"
+                },
+                "restore_success": {
+                  "type": "boolean"
+                },
+                "rpo_minutes": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 5256000
+                },
+                "rto_minutes": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 5256000
+                }
+              },
+              "required": [],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "state",
+            "source",
+            "evidence_id",
+            "collected_at",
+            "facts"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  "required": [
+    "schema_version",
+    "synthetic",
+    "target_alias",
+    "policy",
+    "checks"
+  ],
+  "additionalProperties": false
+}
