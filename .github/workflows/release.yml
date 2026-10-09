@@ -1,15 +1,24 @@
-name: Publish verified prerelease
+name: Публикация проверенного предварительного выпуска
 on:
   workflow_dispatch:
+    inputs:
+      commit:
+        description: Точный SHA финального main для существующего tag
+        required: true
+        type: string
+      release_id:
+        description: ID существующего draft для v0.1.0a2
+        required: true
+        type: string
 permissions:
   contents: read
 concurrency:
-  group: publish-v0.1.0a1
+  group: publish-v0.1.0a2
   cancel-in-progress: false
 env:
-  RELEASE_TAG: v0.1.0a1
-  RELEASE_COMMIT: 069c2e93fc85fb45bc997f95e00730cef036a1c3
-  RELEASE_ID: '407850186'
+  RELEASE_TAG: v0.1.0a2
+  RELEASE_COMMIT: ${{ inputs.commit }}
+  RELEASE_ID: ${{ inputs.release_id }}
 jobs:
   build:
     if: github.ref == 'refs/heads/main'
@@ -20,43 +29,45 @@ jobs:
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
         with:
-          ref: v0.1.0a1
+          ref: v0.1.0a2
           fetch-depth: 0
           persist-credentials: false
       - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
         with:
           python-version: '3.12'
-      - name: Verify immutable release source
+      - name: Проверка неизменяемого исходного commit
         shell: bash
         run: |
           set -euo pipefail
           test "$GITHUB_REPOSITORY" = mejustbox-byte/vps-opsec-auditor
+          python -c 'import os, re; assert re.fullmatch(r"[0-9a-f]{40}", os.environ["RELEASE_COMMIT"]); assert re.fullmatch(r"[0-9]+", os.environ["RELEASE_ID"])'
           test "$(git rev-parse HEAD)" = "$RELEASE_COMMIT"
           test "$(git rev-parse "refs/tags/$RELEASE_TAG^{commit}")" = "$RELEASE_COMMIT"
           git merge-base --is-ancestor "$RELEASE_COMMIT" origin/main
       - run: bash scripts/setup_environment.sh
-      - name: Build and verify reproducibility
+      - name: Сборка и проверка воспроизводимости
         run: |
           set -euo pipefail
           .venv/bin/python scripts/build_release.py
           cp dist/SHA256SUMS /tmp/first-checksums
           .venv/bin/python scripts/build_release.py
           cmp dist/SHA256SUMS /tmp/first-checksums
+          .venv/bin/python scripts/check_packages.py
           (cd dist && sha256sum -c SHA256SUMS)
-      - name: Scan public source for secrets
+      - name: Проверка исходников на секреты
         run: |
           set -euo pipefail
           curl --fail --location --silent --show-error https://github.com/gitleaks/gitleaks/releases/download/v8.24.3/gitleaks_8.24.3_linux_x64.tar.gz -o /tmp/gitleaks.tar.gz
           echo '9991e0b2903da4c8f6122b5c3186448b927a5da4deef1fe45271c3793f4ee29c  /tmp/gitleaks.tar.gz' | sha256sum -c -
           mkdir /tmp/gitleaks /tmp/public-source
           tar -xzf /tmp/gitleaks.tar.gz -C /tmp/gitleaks gitleaks
-          tar -xzf dist/vps_opsec_auditor-0.1.0a1.tar.gz -C /tmp/public-source
+          tar -xzf dist/vps_opsec_auditor-0.1.0a2.tar.gz -C /tmp/public-source
           /tmp/gitleaks/gitleaks dir /tmp/public-source --no-banner --redact
-      - name: Test installed wheel and unchanged checkout
+      - name: Проверка установленного wheel и чистоты checkout
         run: |
           set -euo pipefail
           python -m venv /tmp/release-wheel
-          /tmp/release-wheel/bin/python -m pip install --no-index --no-deps dist/vps_opsec_auditor-0.1.0a1-py3-none-any.whl
+          /tmp/release-wheel/bin/python -m pip install --no-index --no-deps dist/vps_opsec_auditor-0.1.0a2-py3-none-any.whl
           /tmp/release-wheel/bin/python -m pip check
           PYTHONPATH='' /tmp/release-wheel/bin/python -m unittest discover -s tests -v
           /tmp/release-wheel/bin/vps-opsec-auditor fixtures/safe.json --at 2026-10-09T01:00:00Z --format json --fail-on incomplete > /tmp/report.json
@@ -65,12 +76,12 @@ jobs:
           git diff --check
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
-          name: verified-v0.1.0a1
+          name: verified-v0.1.0a2
           if-no-files-found: error
           retention-days: 1
           path: |
-            dist/vps_opsec_auditor-0.1.0a1-py3-none-any.whl
-            dist/vps_opsec_auditor-0.1.0a1.tar.gz
+            dist/vps_opsec_auditor-0.1.0a2-py3-none-any.whl
+            dist/vps_opsec_auditor-0.1.0a2.tar.gz
             dist/SHA256SUMS
   publish:
     if: github.ref == 'refs/heads/main'
@@ -82,20 +93,21 @@ jobs:
     steps:
       - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
         with:
-          name: verified-v0.1.0a1
+          name: verified-v0.1.0a2
           path: dist
-      - name: Upload verified assets to existing release and publish
+      - name: Загрузка проверенных файлов и публикация существующего выпуска
         env:
           GH_TOKEN: ${{ github.token }}
         shell: bash
         run: |
           set -euo pipefail
           test "$GITHUB_REPOSITORY" = mejustbox-byte/vps-opsec-auditor
+          python -c 'import os, re; assert re.fullmatch(r"[0-9a-f]{40}", os.environ["RELEASE_COMMIT"]); assert re.fullmatch(r"[0-9]+", os.environ["RELEASE_ID"])'
           (cd dist && sha256sum -c SHA256SUMS)
           cat > /tmp/check-release.py <<'PY'
           import json, os, sys
           data = json.load(open(sys.argv[1]))
-          expected = {'vps_opsec_auditor-0.1.0a1-py3-none-any.whl', 'vps_opsec_auditor-0.1.0a1.tar.gz', 'SHA256SUMS'}
+          expected = {'vps_opsec_auditor-0.1.0a2-py3-none-any.whl', 'vps_opsec_auditor-0.1.0a2.tar.gz', 'SHA256SUMS'}
           assert data['id'] == int(os.environ['RELEASE_ID'])
           assert data['tag_name'] == os.environ['RELEASE_TAG']
           assert data['target_commitish'] == os.environ['RELEASE_COMMIT']
@@ -108,7 +120,7 @@ jobs:
           elif sys.argv[2] == 'ready':
               assert names == expected
           elif data['draft'] is False:
-              assert names == expected, 'Never add files to an incomplete published release'
+              assert names == expected, 'Нельзя дополнять неполный опубликованный выпуск'
           for name in sorted(names):
               print(name)
           PY
@@ -126,7 +138,7 @@ jobs:
             gh release download "$RELEASE_TAG" --repo "$GITHUB_REPOSITORY" --pattern "$asset" --dir /tmp/existing-assets-dir
             cmp "dist/$asset" "/tmp/existing-assets-dir/$asset"
           done < /tmp/existing-assets
-          for asset in vps_opsec_auditor-0.1.0a1-py3-none-any.whl vps_opsec_auditor-0.1.0a1.tar.gz SHA256SUMS; do
+          for asset in vps_opsec_auditor-0.1.0a2-py3-none-any.whl vps_opsec_auditor-0.1.0a2.tar.gz SHA256SUMS; do
             if ! grep -Fxq "$asset" /tmp/existing-assets; then
               gh release upload "$RELEASE_TAG" "dist/$asset" --repo "$GITHUB_REPOSITORY"
             fi
@@ -134,7 +146,7 @@ jobs:
           mkdir /tmp/downloaded-assets
           gh release download "$RELEASE_TAG" --repo "$GITHUB_REPOSITORY" --dir /tmp/downloaded-assets
           (cd /tmp/downloaded-assets && sha256sum -c SHA256SUMS)
-          for asset in vps_opsec_auditor-0.1.0a1-py3-none-any.whl vps_opsec_auditor-0.1.0a1.tar.gz SHA256SUMS; do
+          for asset in vps_opsec_auditor-0.1.0a2-py3-none-any.whl vps_opsec_auditor-0.1.0a2.tar.gz SHA256SUMS; do
             cmp "dist/$asset" "/tmp/downloaded-assets/$asset"
           done
           gh api "repos/$GITHUB_REPOSITORY/releases/$RELEASE_ID" > /tmp/release-ready.json

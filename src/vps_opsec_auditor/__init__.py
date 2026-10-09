@@ -1,2 +1,2 @@
-"""Read-only, offline VPS security posture auditor."""
-__version__ = "0.1.0a1"
+"""Автономный аудитор безопасности VPS только на чтение."""
+__version__ = "0.1.0a2"

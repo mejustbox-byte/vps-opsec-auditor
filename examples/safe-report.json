@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "auditor_version": "0.1.0a1",
+  "auditor_version": "0.1.0a2",
   "mode": "offline",
   "synthetic": true,
   "target_alias": "disposable-example",
@@ -19,18 +19,18 @@
     "not_run": 0
   },
   "limitations": [
-    "No network or provider API checks were performed.",
-    "Evidence is supplied, not independently verified.",
-    "A pass applies only to this rule, evidence and configured policy."
+    "Проверки сети и API провайдера не выполнялись.",
+    "Свидетельства переданы извне и независимо не проверены.",
+    "Статус pass относится только к этому правилу, свидетельству и заданным порогам."
   ],
   "findings": [
     {
       "check_id": "NET-01",
-      "title": "Public ports and panels",
+      "title": "Публичные порты и панели",
       "status": "pass",
       "severity": "high",
       "confidence": "synthetic",
-      "reason": "Supplied evidence meets this rule and configured policy; not an infrastructure guarantee.",
+      "reason": "Переданные данные соответствуют правилу и порогам; это не гарантия безопасности инфраструктуры.",
       "evidence": {
         "source": "synthetic",
         "evidence_id": "net-01",
@@ -41,15 +41,15 @@
           "public_admin_panel": false
         }
       },
-      "remediation": "Restrict administrative exposure and remove unexpected ports."
+      "remediation": "Ограничьте административный доступ и закройте неожиданные порты."
     },
     {
       "check_id": "SSH-01",
-      "title": "SSH authentication and algorithms",
+      "title": "Вход и алгоритмы SSH",
       "status": "pass",
       "severity": "high",
       "confidence": "synthetic",
-      "reason": "Supplied evidence meets this rule and configured policy; not an infrastructure guarantee.",
+      "reason": "Переданные данные соответствуют правилу и порогам; это не гарантия безопасности инфраструктуры.",
       "evidence": {
         "source": "synthetic",
         "evidence_id": "ssh-01",
@@ -61,15 +61,15 @@
           "weak_algorithms": false
         }
       },
-      "remediation": "Disable password/root login and retire weak SSH algorithms."
+      "remediation": "Отключите вход по паролю и root, исключите слабые алгоритмы SSH."
     },
     {
       "check_id": "FW-01",
-      "title": "Cloud firewall and IPv6",
+      "title": "Облачный firewall и IPv6",
       "status": "pass",
       "severity": "critical",
       "confidence": "synthetic",
-      "reason": "Supplied evidence meets this rule and configured policy; not an infrastructure guarantee.",
+      "reason": "Переданные данные соответствуют правилу и порогам; это не гарантия безопасности инфраструктуры.",
       "evidence": {
         "source": "synthetic",
         "evidence_id": "fw-01",
@@ -83,15 +83,15 @@
           "world_open_admin": false
         }
       },
-      "remediation": "Attach a default-deny firewall to both address families and restrict admin ingress."
+      "remediation": "Привяжите firewall с запретом по умолчанию для обеих адресных семей и ограничьте административный входящий трафик."
     },
     {
       "check_id": "IAM-01",
-      "title": "Provider IAM and API tokens",
+      "title": "IAM провайдера и токены API",
       "status": "pass",
       "severity": "critical",
       "confidence": "synthetic",
-      "reason": "Supplied evidence meets this rule and configured policy; not an infrastructure guarantee.",
+      "reason": "Переданные данные соответствуют правилу и порогам; это не гарантия безопасности инфраструктуры.",
       "evidence": {
         "source": "synthetic",
         "evidence_id": "iam-01",
@@ -104,15 +104,15 @@
           "shared_tokens": false
         }
       },
-      "remediation": "Use least privilege, expiring individual tokens and a rotation policy."
+      "remediation": "Используйте минимальные права, индивидуальные токены со сроком действия и политику ротации."
     },
     {
       "check_id": "MFA-01",
-      "title": "Provider MFA and recovery",
+      "title": "MFA провайдера и восстановление доступа",
       "status": "pass",
       "severity": "critical",
       "confidence": "synthetic",
-      "reason": "Supplied evidence meets this rule and configured policy; not an infrastructure guarantee.",
+      "reason": "Переданные данные соответствуют правилу и порогам; это не гарантия безопасности инфраструктуры.",
       "evidence": {
         "source": "synthetic",
         "evidence_id": "mfa-01",
@@ -123,15 +123,15 @@
           "recovery_isolated": true
         }
       },
-      "remediation": "Enable MFA for every administrator and isolate recovery channels."
+      "remediation": "Включите MFA для каждого администратора и изолируйте каналы восстановления."
     },
     {
       "check_id": "META-01",
-      "title": "Cloud-init and metadata",
+      "title": "Cloud-init и metadata",
       "status": "pass",
       "severity": "high",
       "confidence": "synthetic",
-      "reason": "Supplied evidence meets this rule and configured policy; not an infrastructure guarantee.",
+      "reason": "Переданные данные соответствуют правилу и порогам; это не гарантия безопасности инфраструктуры.",
       "evidence": {
         "source": "synthetic",
         "evidence_id": "meta-01",
@@ -142,15 +142,15 @@
           "metadata_protected": true
         }
       },
-      "remediation": "Remove secrets from user-data and restrict metadata access inside the guest."
+      "remediation": "Удалите секреты из user-data и ограничьте доступ к metadata внутри гостевой системы."
     },
     {
       "check_id": "DNS-01",
-      "title": "DNS ownership and inventory",
+      "title": "Владение DNS и инвентаризация",
       "status": "pass",
       "severity": "high",
       "confidence": "synthetic",
-      "reason": "Supplied evidence meets this rule and configured policy; not an infrastructure guarantee.",
+      "reason": "Переданные данные соответствуют правилу и порогам; это не гарантия безопасности инфраструктуры.",
       "evidence": {
         "source": "synthetic",
         "evidence_id": "dns-01",
@@ -161,15 +161,15 @@
           "dangling_records": false
         }
       },
-      "remediation": "Reconcile DNS records with inventory and remove dangling references."
+      "remediation": "Сверьте записи DNS с инвентаризацией и удалите ссылки на отсутствующие ресурсы."
     },
     {
       "check_id": "TLS-01",
-      "title": "TLS identity and lifetime",
+      "title": "Идентичность и срок действия TLS",
       "status": "pass",
       "severity": "high",
       "confidence": "synthetic",
-      "reason": "Supplied evidence meets this rule and configured policy; not an infrastructure guarantee.",
+      "reason": "Переданные данные соответствуют правилу и порогам; это не гарантия безопасности инфраструктуры.",
       "evidence": {
         "source": "synthetic",
         "evidence_id": "tls-01",
@@ -182,15 +182,15 @@
           "weak_protocols": false
         }
       },
-      "remediation": "Correct the certificate identity/chain, renew it and disable weak protocols."
+      "remediation": "Исправьте идентичность и цепочку сертификата, обновите его и отключите слабые протоколы."
     },
     {
       "check_id": "BAK-01",
-      "title": "Backup protection",
+      "title": "Защита резервных копий",
       "status": "pass",
       "severity": "critical",
       "confidence": "synthetic",
-      "reason": "Supplied evidence meets this rule and configured policy; not an infrastructure guarantee.",
+      "reason": "Переданные данные соответствуют правилу и порогам; это не гарантия безопасности инфраструктуры.",
       "evidence": {
         "source": "synthetic",
         "evidence_id": "bak-01",
@@ -204,15 +204,15 @@
           "immutable": true
         }
       },
-      "remediation": "Schedule encrypted, isolated, immutable backups with sufficient retention."
+      "remediation": "Настройте расписание зашифрованных, изолированных и неизменяемых копий с достаточным сроком хранения."
     },
     {
       "check_id": "REC-01",
-      "title": "Restore and recovery objectives",
+      "title": "Восстановление и его цели",
       "status": "pass",
       "severity": "critical",
       "confidence": "synthetic",
-      "reason": "Supplied evidence meets this rule and configured policy; not an infrastructure guarantee.",
+      "reason": "Переданные данные соответствуют правилу и порогам; это не гарантия безопасности инфраструктуры.",
       "evidence": {
         "source": "synthetic",
         "evidence_id": "rec-01",
@@ -225,7 +225,7 @@
           "rto_minutes": 60
         }
       },
-      "remediation": "Test restoration in an isolated disposable lab and meet the agreed RPO/RTO."
+      "remediation": "Проверьте восстановление на изолированном одноразовом стенде и достигните согласованных RPO/RTO."
     }
   ]
 }

@@ -1,30 +1,34 @@
-# Architecture — implemented offline MVP
+# Архитектура автономного MVP
 
-Regular bounded JSON file → strict schema validation → freshness/capability gate →
-pure rule evaluation → JSON or readable Markdown. No network or shell execution.
+Обычный JSON-файл ограниченного размера → строгая валидация → проверка актуальности
+и доступности источника → чистые правила → JSON или читаемый Markdown.
+Сетевых подключений и выполнения команд оболочки внутри продукта нет.
 
-- `validation.py`: bundled input-v1 schema with closed objects, bounded integers,
-  exact booleans, safe aliases, timezone-aware timestamps, source enums and no raw exports.
-  Implements only the subset used by this bundled schema, not arbitrary JSON Schema.
-  Rejects duplicate keys, NaN/Infinity, invalid/deep JSON, oversized input and unknown fields.
-- `audit.py`: deterministic evaluation across ten stable rule IDs. Policy thresholds
-  are supplied by the owner; no universal RPO/RTO goals are assumed. Evidence timestamps
-  are evaluated against the clock (or explicit replay time). Future/stale evidence
-  produces unknown. Unsupported/error evidence produces unknown; absent/not_run
-  collection produces not_run. Known unsafe facts dominate missing facts.
-- `cli.py`: POSIX regular-file reads bounded to 1 MiB; FIFOs/devices rejected without
-  waiting. Safe errors do not echo evidence, paths or parser excerpts. New output
-  files are exclusive and mode 0600; existing paths/symlinks are not overwritten.
-- Reporter: version, target alias, synthetic label, evaluation timestamp, policy,
-  summary and per-rule severity/confidence/reason/evidence/remediation. Only constrained
-  facts and references can reach output. No untrusted free-text rendering.
+- `validation.py`: встроенная схема input-v1 с закрытыми объектами, ограниченными
+  целыми числами, точными boolean, безопасными псевдонимами, временем с часовым поясом
+  и перечислениями источников. Валидатор реализует только используемую часть схемы,
+  а не произвольный JSON Schema. Отклоняет повторные ключи, NaN/Infinity, некорректный
+  или чрезмерно вложенный JSON, большой ввод и неизвестные поля.
+- `audit.py`: детерминированная оценка 10 правил со стабильными ID. Пороги задаёт
+  владелец; универсальных RPO/RTO нет. Будущие/устаревшие свидетельства дают `unknown`,
+  неподдерживаемый источник или ошибка сбора — `unknown`, отсутствие сбора — `not_run`.
+  Известный небезопасный факт даёт `fail`, даже если другие факты отсутствуют.
+- `cli.py`: чтение обычного файла до 1 МиБ на POSIX; FIFO/устройства отклоняются
+  без ожидания. Ошибки не повторяют данные, пути или фрагменты JSON. Выходные файлы
+  создаются исключительно как новые с 0600; существующие пути и symlinks не перезаписываются.
+- Отчёт содержит версию, псевдоним, признак синтетики, время оценки, пороги, сводку,
+  severity/confidence, причину, свидетельство и рекомендацию. Свободный недоверенный
+  текст во входе не допускается; в вывод попадают ограниченные факты и ссылки.
 
-The `load(bytes)` API returns validated data; `audit(validated_data, now)` evaluates
-it. Library callers must validate first and supply a timezone-aware clock if overriding.
-Schema_version 1 is fixed; unknown versions fail closed. A source tag is an assertion,
-not cryptographic evidence provenance. All results explicitly disclaim independent verification.
-Read-only means no infrastructure mutation; an explicitly requested local report is written.
+`load(bytes)` возвращает валидированные данные; `audit(validated_data, now)` их оценивает.
+Вызывающий код обязан сначала валидировать вход и передать время с часовым поясом,
+если меняет часы оценки. Поддерживается только schema_version=1.
+Метка источника — утверждение, а не криптографическое доказательство происхождения.
+Отчёты явно указывают отсутствие независимой проверки. Локальный отчёт записывается
+по запросу; инфраструктура остаётся неизменной.
 
-Future collectors/adapters are outside this release. They need owner-approved scope,
-read-only API allowlists, endpoint/DNS/redirect validation, budgets, redaction and lab
-validation before integration. Restore remains an owner action; auditor reads its evidence.
+Сборщики и адаптеры провайдера отложены. До реализации требуются разрешённая область,
+список методов только чтения, проверка назначения/DNS/redirect, бюджет запросов,
+обезличивание и лаборатория. Восстановление выполняет владелец; аудитор читает результат.
+
+Корневой самостоятельный раздел: [ARCHITECTURE.md](../ARCHITECTURE.md).

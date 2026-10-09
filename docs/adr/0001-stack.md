@@ -1,21 +1,24 @@
-# ADR-0001: offline-first Python CLI
+# ADR-0001: автономный Python CLI
 
-Status: accepted for MVP under the user's implementation authorization. Date: 2026-10-09.
+Статус: принято для MVP по разрешению пользователя. Дата: 2026-10-09.
 
-## Decision and rationale
-Python 3.12+, POSIX CLI; zero third-party runtime dependencies. Standard library
-JSON/typing/time handling and unittest support strict offline rules and synthetic tests.
-The bundled closed JSON Schema is enforced by a deliberately small validator for
-its used keywords. The schema and installed copy must match (tested).
-Setuptools 80.9.0 builds the wheel; its wheel hash is pinned in requirements-build.txt.
-The public source bundle is deterministic, and wheel timestamps use a fixed build epoch.
-No database, web server, provider SDK, daemon or VPS guest agent.
+## Решение и обоснование
+Python 3.12+, POSIX CLI без сторонних зависимостей времени выполнения. Стандартная библиотека
+обеспечивает JSON, время и unittest для правил и синтетических тестов.
+Встроенную закрытую JSON Schema проверяет небольшой валидатор используемых ключевых
+слов; публичная и установленная схемы должны совпадать, что проверяется тестом.
+Setuptools 80.9.0 закреплён хешем wheel в requirements-build.txt.
+Исходный архив детерминирован, время записей wheel задаётся фиксированной эпохой.
+Права файлов wheel могут отличаться между средами; содержимое проверяется отдельно.
+Базы данных, веб-сервера, SDK провайдера, демона и агента на VPS нет.
 
-## Alternatives / trade-offs
-Go provides a portable binary and compile-time types but more fixture iteration work.
-TypeScript adds a Node/runtime dependency ecosystem without a current CLI benefit.
-Python reduces offline complexity; the small validator must evolve with the schema.
-A full schema library is preferable if the contract grows beyond the tested subset.
-CLI POSIX filesystem protections are intentionally required; Windows is not validated.
-Provider SDK selection is deferred until a provider-specific disposable lab exists.
-Revisit for portable binaries, broad concurrency, complex schemas or adapter requirements.
+## Альтернативы и последствия
+Go даёт переносимый бинарный файл и статические типы, но требует больше работы
+с синтетическими сценариями. TypeScript добавляет Node и зависимости без преимущества
+для текущего CLI. Python упрощает автономную реализацию; небольшой валидатор необходимо
+согласованно расширять со схемой. При усложнении контракта лучше полная библиотека схем.
+Защита файлов требует POSIX; Windows не проверялся. SDK выбирается после лаборатории
+конкретного провайдера. Пересмотр нужен для переносимых бинарных файлов, широкой
+параллельности, сложных схем или требований адаптеров.
+
+Корневой раздел: [TECH-STACK](../../TECH-STACK.md).

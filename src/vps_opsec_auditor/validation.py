@@ -1,4 +1,4 @@
-"""Strict, bounded validator for the bundled schema subset (not a general validator)."""
+"""Строгий ограниченный валидатор используемой части встроенной схемы."""
 import json
 import re
 from datetime import datetime, timezone
@@ -8,7 +8,7 @@ MAX_BYTES = 1_048_576
 
 
 class InputError(ValueError):
-    """Safe error: contains schema paths, never input values."""
+    """Безопасная ошибка: только пути схемы, без значений ввода."""
 
 
 def timestamp(value):
@@ -20,32 +20,32 @@ def timestamp(value):
             raise ValueError
         return result.astimezone(timezone.utc)
     except (ValueError, TypeError, OverflowError):
-        raise InputError("invalid timezone-aware timestamp") from None
+        raise InputError("неверное время с часовым поясом") from None
 
 
 def validate(value, schema, path="input"):
     types = {"object": dict, "string": str, "integer": int, "boolean": bool}
     if type(value) is not types[schema["type"]]:
-        raise InputError(f"{path}: invalid type")
+        raise InputError(f"{path}: неверный тип")
     if "const" in schema and value != schema["const"]:
-        raise InputError(f"{path}: unsupported version")
+        raise InputError(f"{path}: неподдерживаемая версия")
     if "enum" in schema and value not in schema["enum"]:
-        raise InputError(f"{path}: invalid choice")
+        raise InputError(f"{path}: неверный вариант")
     if isinstance(value, dict):
         if set(value) - set(schema["properties"]):
-            raise InputError(f"{path}: unexpected field")
+            raise InputError(f"{path}: неизвестное поле")
         if set(schema["required"]) - set(value):
-            raise InputError(f"{path}: missing required field")
+            raise InputError(f"{path}: нет обязательного поля")
         for key, child in value.items():
             validate(child, schema["properties"][key], f"{path}.{key}")
     elif type(value) is int:
         if value < schema.get("minimum", value) or value > schema.get("maximum", value):
-            raise InputError(f"{path}: out of range")
+            raise InputError(f"{path}: вне диапазона")
     elif isinstance(value, str):
         if len(value) > schema.get("maxLength", len(value)):
-            raise InputError(f"{path}: string too long")
+            raise InputError(f"{path}: слишком длинная строка")
         if "pattern" in schema and re.fullmatch(schema["pattern"], value) is None:
-            raise InputError(f"{path}: invalid alias")
+            raise InputError(f"{path}: неверный псевдоним")
         if schema.get("format") == "date-time":
             timestamp(value)
 
@@ -54,29 +54,29 @@ def _pairs(pairs):
     result = {}
     for key, value in pairs:
         if key in result:
-            raise InputError("duplicate JSON key")
+            raise InputError("повторный ключ JSON")
         result[key] = value
     return result
 
 
 def _constant(_value):
-    raise InputError("non-finite JSON number")
+    raise InputError("бесконечное число или NaN в JSON")
 
 
 def load(raw):
     if len(raw) > MAX_BYTES:
-        raise InputError("input exceeds 1 MiB")
+        raise InputError("вход превышает 1 МиБ")
     try:
         value = json.loads(raw, object_pairs_hook=_pairs, parse_constant=_constant)
     except (json.JSONDecodeError, UnicodeDecodeError, RecursionError, ValueError) as exc:
         if isinstance(exc, InputError):
             raise
-        raise InputError("invalid JSON") from None
+        raise InputError("неверный JSON") from None
     schema = json.loads(files("vps_opsec_auditor").joinpath("input-v1.schema.json").read_text())
     validate(value, schema)
     for item in value["checks"].values():
         if value["synthetic"] != (item["source"] == "synthetic"):
-            raise InputError("synthetic flag conflicts with evidence source")
+            raise InputError("признак synthetic не соответствует источнику")
         if item["state"] != "observed" and item["facts"]:
-            raise InputError("non-observed evidence must have empty facts")
+            raise InputError("состояние не observed требует пустых facts")
     return value

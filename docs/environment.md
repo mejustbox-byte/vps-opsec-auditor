@@ -1,58 +1,58 @@
-# Development environment and CI
+# Среда разработки, CI и выпуск
 
-Managed runtime is running/connected. The initial checkout was clean on branch work
-at main commit 1b5005ea6b899b9ae2cdba4443e504de4d234a10, with only README tracked.
-Prepared docs/fixtures/scripts were untracked and preserved/updated for implementation.
-No AGENTS.md was found in the workspace.
+Используется существующий изолированный checkout `/workspace/vps-opsec-auditor`.
+Изначально на main `1b5005ea6b899b9ae2cdba4443e504de4d234a10` был только README;
+подготовленные документы сохранены и обновлены. AGENTS.md в workspace не найден.
 
-## Required workflow
-Python 3.12+, POSIX, git. Runtime has no third-party dependencies and no services.
-Run `bash scripts/setup_environment.sh` from the checkout. It creates .venv,
-installs `requirements-build.txt` with --require-hashes, installs the project with
---no-build-isolation --no-deps, then runs tests/docs/public-data/installed CLI smoke.
-It works without a saved virtual environment and is repeatable. No shell activation required. Tests use unittest with PYTHONPATH=src.
-Check docs/public data; build via `scripts/build_release.py`; install resulting wheel
-into a separate clean venv with --no-index --no-deps and run a synthetic audit.
-No provider tokens, cloud resources or new audit destinations are needed.
+## Установка и проверки
+Нужны Python 3.12+, POSIX, git. Runtime-зависимостей и сервисов нет.
+Из checkout выполните `bash scripts/setup_environment.sh`: создаётся `.venv`,
+устанавливается закреплённый хешем setuptools, затем пакет с --no-build-isolation
+--no-deps, проверяются зависимости, модульные/интеграционные тесты, документы, публичные
+данные и установленный CLI. Сохранённый venv не требуется; повторный запуск проверен.
+Команды из [README](../README.md) выполняются без активации оболочки.
 
-## CI and release evidence
-CI runs pinned checkout/setup-python, pinned build dependencies, docs/public-data
-checks, unit/integration tests, wheel/source build, checksum-pinned gitleaks scan, clean installation and synthetic
-smoke test. Contents permission is read; no provider secrets or report artifacts.
-Remote CI/PR/release status must be reported from actual GitHub outcomes, not inferred
-from local tests. First release is prerelease while real platform checks are unperformed.
-API access and Git proxy authorization are separate capabilities; a working ls-remote
-is not proof of PR/merge/release permission. Publication blockers are recorded in the
-final execution report, not disguised as completed release work.
+`install_script` среды:
 
-## Reusable cloud startup
-Use the existing isolated checkout; no worktree unless explicitly requested. Inspect
-status and docs before work. Preserve credentials/proxy/CA configuration. Rerun tests
-and installed CLI smoke after restoring a snapshot. Prior docs-only scope is superseded
-by the current user's explicit implementation/commit/push/PR/merge/release authorization.
-Public data remains synthetic; no paid resources, real credentials or arbitrary scans.
+```sh
+set -euo pipefail
+cd /workspace/vps-opsec-auditor
+bash scripts/setup_environment.sh
+```
 
-## Managed environment draft
-install_script: `set -euo pipefail; cd /workspace/vps-opsec-auditor; bash scripts/setup_environment.sh`.
-start_skill: inspect this checkout, run the setup script if .venv is absent, then tests
-and installed CLI smoke as documented above; no services or credentials required.
-The prior docs-only instructions are replaced. No onboarding directory is used.
-API domains api.github.com/uploads.github.com may be added to the existing package-manager
-preset through the draft. No credentials are added or revealed. Saving is not runtime
-application or environment publication. Git push works independently of API authorization.
-GitHub API access subsequently became available through the normal gh CLI.
-PR #1 and commit d8ddb6a were verified through gh; push run 37923541901 and PR run
-37923547213 both completed successfully. Later commits require their own CI verification.
+`start_skill`: прочитать документы/статус, воспроизвести установку и проверки этой
+командой; использовать `.venv/bin/vps-opsec-auditor`; сервисы не запускать.
+Данные только синтетические, реальные учётные данные провайдера не нужны.
+Сохранение draft не применяет настройки runtime и не публикует snapshot среды.
 
-## Release publication through Actions
-`.github/workflows/release.yml` is manually dispatched from main for the existing
-v0.1.0a1 draft (ID 407850186), with immutable source commit
-069c2e93fc85fb45bc997f95e00730cef036a1c3. The tag is never moved or recreated.
-A read-only job checks tag/commit ancestry, runs tests/secret scan, builds twice,
-checks reproducibility and tests the installed wheel. A separate job has only
-contents:write and uses the standard job GITHUB_TOKEN to upload assets to the existing
-draft. It checks tag identity, downloads and compares all assets/checksums before
-publishing prerelease, then verifies published state. It does not create another release.
-No user credentials or provider operations are involved. Unexpected existing assets,
-identity mismatches or differing files stop publication. The workflow is specific to
-this first release; a future version needs a reviewed update to its fixed constants.
+## CI и подтверждённый первый выпуск
+CI: закреплённые actions, установка из checkout, тесты, документы/публичные данные,
+сборка, gitleaks с проверкой хеша и чистая установка wheel. Права CI — contents:read.
+[CI продукта](https://github.com/mejustbox-byte/vps-opsec-auditor/actions/runs/37923861951)
+для `069c2e93fc85fb45bc997f95e00730cef036a1c3` успешен.
+[CI workflow main](https://github.com/mejustbox-byte/vps-opsec-auditor/actions/runs/37925368402)
+и [публикация 0.1.0a1](https://github.com/mejustbox-byte/vps-opsec-auditor/actions/runs/37925383868)
+успешны; оба задача сборки/публикации выполнены. [Выпуск 0.1.0a1](https://github.com/mejustbox-byte/vps-opsec-auditor/releases/tag/v0.1.0a1)
+сохранён. Его 3 assets скачаны, SHA256 и содержимое проверены, wheel установлен отдельно.
+Git-чтение, API, push и загрузка assets — разные возможности; локальный upload дал
+401, публикация выполнена штатным GITHUB_TOKEN в Actions без новых учётные данные.
+
+## Новый выпуск 0.1.0a2
+release.yml запускается вручную из main с `commit` и `release_id`; tag — v0.1.0a2.
+Сначала создать tag на финальном main после успешного CI и отдельный draft с русскими
+notes. Указать точный SHA и ID этого draft; не использовать ID старого выпуска.
+Задача сборки имеет только contents:read, проверяет tag/commit/принадлежность main,
+запускает тесты/gitleaks, собирает дважды и проверяет установленный wheel.
+Только отдельный задача публикации имеет contents:write и стандартный GITHUB_TOKEN.
+Он проверяет существующий draft, файлы и tag, загружает 3 assets, скачивает их,
+сверяет SHA256/содержимое, публикует prerelease и повторно проверяет состояние.
+Release не дублируется, tag не передвигается. Для следующей версии нужен проверенный PR.
+
+## Возобновление работы
+Сохранить пользовательские изменения, использовать текущий checkout без worktree,
+если он не запрошен явно. Сохранить proxy/CA и штатную аутентификацию; не раскрывать
+секреты и не обходить ограничения. После восстановления snapshot повторить установку
+и тесты. Все реальные провайдера/сети/metadata/резервных копий/восстановления проверки не выполнены.
+Публикация среды и выпуск продукта — отдельные операции.
+
+Корневой самостоятельный раздел: [CLOUD-DEVELOPMENT.md](../CLOUD-DEVELOPMENT.md).

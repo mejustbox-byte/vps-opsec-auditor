@@ -1,19 +1,22 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "title": "Sanitized offline VPS audit evidence v1",
+  "title": "Обезличенные свидетельства автономного аудита VPS, версия 1",
   "type": "object",
   "properties": {
     "schema_version": {
       "type": "integer",
-      "const": 1
+      "const": 1,
+      "description": "Версия контракта входа; поддерживается только 1."
     },
     "synthetic": {
-      "type": "boolean"
+      "type": "boolean",
+      "description": "Истина для синтетических данных; должна соответствовать source всех свидетельств."
     },
     "target_alias": {
       "type": "string",
       "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_-]{0,63}$",
-      "maxLength": 64
+      "maxLength": 64,
+      "description": "Безопасный псевдоним цели, без IP, секретов и идентифицирующих сведений."
     },
     "policy": {
       "type": "object",
@@ -21,27 +24,32 @@
         "max_age_hours": {
           "type": "integer",
           "minimum": 1,
-          "maximum": 8760
+          "maximum": 8760,
+          "description": "Максимальный возраст свидетельства в часах."
         },
         "min_tls_days": {
           "type": "integer",
           "minimum": 1,
-          "maximum": 365
+          "maximum": 365,
+          "description": "Минимальный остаток срока TLS в днях."
         },
         "min_retention_days": {
           "type": "integer",
           "minimum": 1,
-          "maximum": 36500
+          "maximum": 36500,
+          "description": "Минимальный срок хранения резервных копий в днях."
         },
         "max_rpo_minutes": {
           "type": "integer",
           "minimum": 1,
-          "maximum": 5256000
+          "maximum": 5256000,
+          "description": "Максимальный допустимый RPO в минутах."
         },
         "max_rto_minutes": {
           "type": "integer",
           "minimum": 1,
-          "maximum": 5256000
+          "maximum": 5256000,
+          "description": "Максимальный допустимый RTO в минутах."
         }
       },
       "required": [
@@ -51,7 +59,8 @@
         "max_rpo_minutes",
         "max_rto_minutes"
       ],
-      "additionalProperties": false
+      "additionalProperties": false,
+      "description": "Пороги владельца для оценки; примеры не являются универсальной политикой."
     },
     "checks": {
       "type": "object",
@@ -66,7 +75,8 @@
                 "unsupported",
                 "not_run",
                 "error"
-              ]
+              ],
+              "description": "Состояние сбора; не observed требует пустых facts."
             },
             "source": {
               "type": "string",
@@ -75,17 +85,20 @@
                 "operator",
                 "provider_export",
                 "lab"
-              ]
+              ],
+              "description": "Утверждаемый источник данных, а не доказательство их истинности."
             },
             "evidence_id": {
               "type": "string",
               "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_-]{0,63}$",
-              "maxLength": 64
+              "maxLength": 64,
+              "description": "Безопасная частная ссылка-псевдоним на свидетельство."
             },
             "collected_at": {
               "type": "string",
               "format": "date-time",
-              "maxLength": 32
+              "maxLength": 32,
+              "description": "Время сбора ISO с часовым поясом; будущее и устаревание дают unknown."
             },
             "facts": {
               "type": "object",
@@ -93,14 +106,17 @@
                 "unexpected_ports": {
                   "type": "integer",
                   "minimum": 0,
-                  "maximum": 65535
+                  "maximum": 65535,
+                  "description": "Количество неожиданных публичных портов."
                 },
                 "public_admin_panel": {
-                  "type": "boolean"
+                  "type": "boolean",
+                  "description": "Наличие общедоступной административной панели."
                 }
               },
               "required": [],
-              "additionalProperties": false
+              "additionalProperties": false,
+              "description": "Обезличенные факты; пропущенный необходимый факт даёт unknown."
             }
           },
           "required": [
@@ -110,7 +126,8 @@
             "collected_at",
             "facts"
           ],
-          "additionalProperties": false
+          "additionalProperties": false,
+          "description": "Свидетельство для проверки NET-01."
         },
         "SSH-01": {
           "type": "object",
@@ -122,7 +139,8 @@
                 "unsupported",
                 "not_run",
                 "error"
-              ]
+              ],
+              "description": "Состояние сбора; не observed требует пустых facts."
             },
             "source": {
               "type": "string",
@@ -131,33 +149,40 @@
                 "operator",
                 "provider_export",
                 "lab"
-              ]
+              ],
+              "description": "Утверждаемый источник данных, а не доказательство их истинности."
             },
             "evidence_id": {
               "type": "string",
               "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_-]{0,63}$",
-              "maxLength": 64
+              "maxLength": 64,
+              "description": "Безопасная частная ссылка-псевдоним на свидетельство."
             },
             "collected_at": {
               "type": "string",
               "format": "date-time",
-              "maxLength": 32
+              "maxLength": 32,
+              "description": "Время сбора ISO с часовым поясом; будущее и устаревание дают unknown."
             },
             "facts": {
               "type": "object",
               "properties": {
                 "password_auth": {
-                  "type": "boolean"
+                  "type": "boolean",
+                  "description": "Разрешён ли вход SSH по паролю."
                 },
                 "root_login": {
-                  "type": "boolean"
+                  "type": "boolean",
+                  "description": "Разрешён ли вход root через SSH."
                 },
                 "weak_algorithms": {
-                  "type": "boolean"
+                  "type": "boolean",
+                  "description": "Наличие слабых алгоритмов SSH."
                 }
               },
               "required": [],
-              "additionalProperties": false
+              "additionalProperties": false,
+              "description": "Обезличенные факты; пропущенный необходимый факт даёт unknown."
             }
           },
           "required": [
@@ -167,7 +192,8 @@
             "collected_at",
             "facts"
           ],
-          "additionalProperties": false
+          "additionalProperties": false,
+          "description": "Свидетельство для проверки SSH-01."
         },
         "FW-01": {
           "type": "object",
@@ -179,7 +205,8 @@
                 "unsupported",
                 "not_run",
                 "error"
-              ]
+              ],
+              "description": "Состояние сбора; не observed требует пустых facts."
             },
             "source": {
               "type": "string",
@@ -188,39 +215,48 @@
                 "operator",
                 "provider_export",
                 "lab"
-              ]
+              ],
+              "description": "Утверждаемый источник данных, а не доказательство их истинности."
             },
             "evidence_id": {
               "type": "string",
               "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_-]{0,63}$",
-              "maxLength": 64
+              "maxLength": 64,
+              "description": "Безопасная частная ссылка-псевдоним на свидетельство."
             },
             "collected_at": {
               "type": "string",
               "format": "date-time",
-              "maxLength": 32
+              "maxLength": 32,
+              "description": "Время сбора ISO с часовым поясом; будущее и устаревание дают unknown."
             },
             "facts": {
               "type": "object",
               "properties": {
                 "attached": {
-                  "type": "boolean"
+                  "type": "boolean",
+                  "description": "Привязан ли облачный firewall к ресурсу."
                 },
                 "default_deny_v4": {
-                  "type": "boolean"
+                  "type": "boolean",
+                  "description": "Есть ли запрет IPv4 по умолчанию."
                 },
                 "ipv6_enabled": {
-                  "type": "boolean"
+                  "type": "boolean",
+                  "description": "Явное утверждение о включённом IPv6."
                 },
                 "default_deny_v6": {
-                  "type": "boolean"
+                  "type": "boolean",
+                  "description": "Есть ли запрет IPv6 по умолчанию."
                 },
                 "world_open_admin": {
-                  "type": "boolean"
+                  "type": "boolean",
+                  "description": "Открыт ли административный доступ для всего Интернета."
                 }
               },
               "required": [],
-              "additionalProperties": false
+              "additionalProperties": false,
+              "description": "Обезличенные факты; пропущенный необходимый факт даёт unknown."
             }
           },
           "required": [
@@ -230,7 +266,8 @@
             "collected_at",
             "facts"
           ],
-          "additionalProperties": false
+          "additionalProperties": false,
+          "description": "Свидетельство для проверки FW-01."
         },
         "IAM-01": {
           "type": "object",
@@ -242,7 +279,8 @@
                 "unsupported",
                 "not_run",
                 "error"
-              ]
+              ],
+              "description": "Состояние сбора; не observed требует пустых facts."
             },
             "source": {
               "type": "string",
@@ -251,36 +289,44 @@
                 "operator",
                 "provider_export",
                 "lab"
-              ]
+              ],
+              "description": "Утверждаемый источник данных, а не доказательство их истинности."
             },
             "evidence_id": {
               "type": "string",
               "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_-]{0,63}$",
-              "maxLength": 64
+              "maxLength": 64,
+              "description": "Безопасная частная ссылка-псевдоним на свидетельство."
             },
             "collected_at": {
               "type": "string",
               "format": "date-time",
-              "maxLength": 32
+              "maxLength": 32,
+              "description": "Время сбора ISO с часовым поясом; будущее и устаревание дают unknown."
             },
             "facts": {
               "type": "object",
               "properties": {
                 "least_privilege": {
-                  "type": "boolean"
+                  "type": "boolean",
+                  "description": "Подтверждены ли минимально необходимые права IAM."
                 },
                 "tokens_expire": {
-                  "type": "boolean"
+                  "type": "boolean",
+                  "description": "Все ли API tokens имеют ограниченный срок."
                 },
                 "rotation_policy": {
-                  "type": "boolean"
+                  "type": "boolean",
+                  "description": "Есть ли политика ротации токенов."
                 },
                 "shared_tokens": {
-                  "type": "boolean"
+                  "type": "boolean",
+                  "description": "Используются ли общие токены."
                 }
               },
               "required": [],
-              "additionalProperties": false
+              "additionalProperties": false,
+              "description": "Обезличенные факты; пропущенный необходимый факт даёт unknown."
             }
           },
           "required": [
@@ -290,7 +336,8 @@
             "collected_at",
             "facts"
           ],
-          "additionalProperties": false
+          "additionalProperties": false,
+          "description": "Свидетельство для проверки IAM-01."
         },
         "MFA-01": {
           "type": "object",
@@ -302,7 +349,8 @@
                 "unsupported",
                 "not_run",
                 "error"
-              ]
+              ],
+              "description": "Состояние сбора; не observed требует пустых facts."
             },
             "source": {
               "type": "string",
@@ -311,30 +359,36 @@
                 "operator",
                 "provider_export",
                 "lab"
-              ]
+              ],
+              "description": "Утверждаемый источник данных, а не доказательство их истинности."
             },
             "evidence_id": {
               "type": "string",
               "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_-]{0,63}$",
-              "maxLength": 64
+              "maxLength": 64,
+              "description": "Безопасная частная ссылка-псевдоним на свидетельство."
             },
             "collected_at": {
               "type": "string",
               "format": "date-time",
-              "maxLength": 32
+              "maxLength": 32,
+              "description": "Время сбора ISO с часовым поясом; будущее и устаревание дают unknown."
             },
             "facts": {
               "type": "object",
               "properties": {
                 "all_admins_mfa": {
-                  "type": "boolean"
+                  "type": "boolean",
+                  "description": "Включена ли MFA у всех администраторов."
                 },
                 "recovery_isolated": {
-                  "type": "boolean"
+                  "type": "boolean",
+                  "description": "Изолированы ли каналы восстановления доступа."
                 }
               },
               "required": [],
-              "additionalProperties": false
+              "additionalProperties": false,
+              "description": "Обезличенные факты; пропущенный необходимый факт даёт unknown."
             }
           },
           "required": [
@@ -344,7 +398,8 @@
             "collected_at",
             "facts"
           ],
-          "additionalProperties": false
+          "additionalProperties": false,
+          "description": "Свидетельство для проверки MFA-01."
         },
         "META-01": {
           "type": "object",
@@ -356,7 +411,8 @@
                 "unsupported",
                 "not_run",
                 "error"
-              ]
+              ],
+              "description": "Состояние сбора; не observed требует пустых facts."
             },
             "source": {
               "type": "string",
@@ -365,30 +421,36 @@
                 "operator",
                 "provider_export",
                 "lab"
-              ]
+              ],
+              "description": "Утверждаемый источник данных, а не доказательство их истинности."
             },
             "evidence_id": {
               "type": "string",
               "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_-]{0,63}$",
-              "maxLength": 64
+              "maxLength": 64,
+              "description": "Безопасная частная ссылка-псевдоним на свидетельство."
             },
             "collected_at": {
               "type": "string",
               "format": "date-time",
-              "maxLength": 32
+              "maxLength": 32,
+              "description": "Время сбора ISO с часовым поясом; будущее и устаревание дают unknown."
             },
             "facts": {
               "type": "object",
               "properties": {
                 "user_data_contains_secrets": {
-                  "type": "boolean"
+                  "type": "boolean",
+                  "description": "Содержит ли user-data секреты по обезличенной оценке."
                 },
                 "metadata_protected": {
-                  "type": "boolean"
+                  "type": "boolean",
+                  "description": "Подтверждена ли защита доступа к metadata внутри гостевой системы."
                 }
               },
               "required": [],
-              "additionalProperties": false
+              "additionalProperties": false,
+              "description": "Обезличенные факты; пропущенный необходимый факт даёт unknown."
             }
           },
           "required": [
@@ -398,7 +460,8 @@
             "collected_at",
             "facts"
           ],
-          "additionalProperties": false
+          "additionalProperties": false,
+          "description": "Свидетельство для проверки META-01."
         },
         "DNS-01": {
           "type": "object",
@@ -410,7 +473,8 @@
                 "unsupported",
                 "not_run",
                 "error"
-              ]
+              ],
+              "description": "Состояние сбора; не observed требует пустых facts."
             },
             "source": {
               "type": "string",
@@ -419,30 +483,36 @@
                 "operator",
                 "provider_export",
                 "lab"
-              ]
+              ],
+              "description": "Утверждаемый источник данных, а не доказательство их истинности."
             },
             "evidence_id": {
               "type": "string",
               "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_-]{0,63}$",
-              "maxLength": 64
+              "maxLength": 64,
+              "description": "Безопасная частная ссылка-псевдоним на свидетельство."
             },
             "collected_at": {
               "type": "string",
               "format": "date-time",
-              "maxLength": 32
+              "maxLength": 32,
+              "description": "Время сбора ISO с часовым поясом; будущее и устаревание дают unknown."
             },
             "facts": {
               "type": "object",
               "properties": {
                 "records_match_inventory": {
-                  "type": "boolean"
+                  "type": "boolean",
+                  "description": "Соответствуют ли DNS-записи инвентаризации владельца."
                 },
                 "dangling_records": {
-                  "type": "boolean"
+                  "type": "boolean",
+                  "description": "Есть ли DNS-записи на отсутствующие ресурсы."
                 }
               },
               "required": [],
-              "additionalProperties": false
+              "additionalProperties": false,
+              "description": "Обезличенные факты; пропущенный необходимый факт даёт unknown."
             }
           },
           "required": [
@@ -452,7 +522,8 @@
             "collected_at",
             "facts"
           ],
-          "additionalProperties": false
+          "additionalProperties": false,
+          "description": "Свидетельство для проверки DNS-01."
         },
         "TLS-01": {
           "type": "object",
@@ -464,7 +535,8 @@
                 "unsupported",
                 "not_run",
                 "error"
-              ]
+              ],
+              "description": "Состояние сбора; не observed требует пустых facts."
             },
             "source": {
               "type": "string",
@@ -473,38 +545,46 @@
                 "operator",
                 "provider_export",
                 "lab"
-              ]
+              ],
+              "description": "Утверждаемый источник данных, а не доказательство их истинности."
             },
             "evidence_id": {
               "type": "string",
               "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_-]{0,63}$",
-              "maxLength": 64
+              "maxLength": 64,
+              "description": "Безопасная частная ссылка-псевдоним на свидетельство."
             },
             "collected_at": {
               "type": "string",
               "format": "date-time",
-              "maxLength": 32
+              "maxLength": 32,
+              "description": "Время сбора ISO с часовым поясом; будущее и устаревание дают unknown."
             },
             "facts": {
               "type": "object",
               "properties": {
                 "identity_valid": {
-                  "type": "boolean"
+                  "type": "boolean",
+                  "description": "Соответствует ли TLS-сертификат идентичности цели."
                 },
                 "chain_valid": {
-                  "type": "boolean"
+                  "type": "boolean",
+                  "description": "Корректна ли цепочка TLS для выбранного trust store."
                 },
                 "days_remaining": {
                   "type": "integer",
                   "minimum": 0,
-                  "maximum": 36500
+                  "maximum": 36500,
+                  "description": "Остаток срока TLS в днях; истёкший сертификат нормализуется в 0."
                 },
                 "weak_protocols": {
-                  "type": "boolean"
+                  "type": "boolean",
+                  "description": "Есть ли слабые TLS-протоколы."
                 }
               },
               "required": [],
-              "additionalProperties": false
+              "additionalProperties": false,
+              "description": "Обезличенные факты; пропущенный необходимый факт даёт unknown."
             }
           },
           "required": [
@@ -514,7 +594,8 @@
             "collected_at",
             "facts"
           ],
-          "additionalProperties": false
+          "additionalProperties": false,
+          "description": "Свидетельство для проверки TLS-01."
         },
         "BAK-01": {
           "type": "object",
@@ -526,7 +607,8 @@
                 "unsupported",
                 "not_run",
                 "error"
-              ]
+              ],
+              "description": "Состояние сбора; не observed требует пустых facts."
             },
             "source": {
               "type": "string",
@@ -535,41 +617,50 @@
                 "operator",
                 "provider_export",
                 "lab"
-              ]
+              ],
+              "description": "Утверждаемый источник данных, а не доказательство их истинности."
             },
             "evidence_id": {
               "type": "string",
               "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_-]{0,63}$",
-              "maxLength": 64
+              "maxLength": 64,
+              "description": "Безопасная частная ссылка-псевдоним на свидетельство."
             },
             "collected_at": {
               "type": "string",
               "format": "date-time",
-              "maxLength": 32
+              "maxLength": 32,
+              "description": "Время сбора ISO с часовым поясом; будущее и устаревание дают unknown."
             },
             "facts": {
               "type": "object",
               "properties": {
                 "scheduled": {
-                  "type": "boolean"
+                  "type": "boolean",
+                  "description": "Настроено ли расписание копирования."
                 },
                 "retention_days": {
                   "type": "integer",
                   "minimum": 0,
-                  "maximum": 36500
+                  "maximum": 36500,
+                  "description": "Срок хранения копий в днях."
                 },
                 "encrypted": {
-                  "type": "boolean"
+                  "type": "boolean",
+                  "description": "Зашифрованы ли копии."
                 },
                 "isolated": {
-                  "type": "boolean"
+                  "type": "boolean",
+                  "description": "Изолирован ли доступ к копиям."
                 },
                 "immutable": {
-                  "type": "boolean"
+                  "type": "boolean",
+                  "description": "Защищены ли копии от изменения."
                 }
               },
               "required": [],
-              "additionalProperties": false
+              "additionalProperties": false,
+              "description": "Обезличенные факты; пропущенный необходимый факт даёт unknown."
             }
           },
           "required": [
@@ -579,7 +670,8 @@
             "collected_at",
             "facts"
           ],
-          "additionalProperties": false
+          "additionalProperties": false,
+          "description": "Свидетельство для проверки BAK-01."
         },
         "REC-01": {
           "type": "object",
@@ -591,7 +683,8 @@
                 "unsupported",
                 "not_run",
                 "error"
-              ]
+              ],
+              "description": "Состояние сбора; не observed требует пустых facts."
             },
             "source": {
               "type": "string",
@@ -600,40 +693,48 @@
                 "operator",
                 "provider_export",
                 "lab"
-              ]
+              ],
+              "description": "Утверждаемый источник данных, а не доказательство их истинности."
             },
             "evidence_id": {
               "type": "string",
               "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_-]{0,63}$",
-              "maxLength": 64
+              "maxLength": 64,
+              "description": "Безопасная частная ссылка-псевдоним на свидетельство."
             },
             "collected_at": {
               "type": "string",
               "format": "date-time",
-              "maxLength": 32
+              "maxLength": 32,
+              "description": "Время сбора ISO с часовым поясом; будущее и устаревание дают unknown."
             },
             "facts": {
               "type": "object",
               "properties": {
                 "restore_tested": {
-                  "type": "boolean"
+                  "type": "boolean",
+                  "description": "Выполнялся ли отдельный тест восстановления."
                 },
                 "restore_success": {
-                  "type": "boolean"
+                  "type": "boolean",
+                  "description": "Подтверждён ли успех восстановления."
                 },
                 "rpo_minutes": {
                   "type": "integer",
                   "minimum": 0,
-                  "maximum": 5256000
+                  "maximum": 5256000,
+                  "description": "Измеренный RPO в минутах."
                 },
                 "rto_minutes": {
                   "type": "integer",
                   "minimum": 0,
-                  "maximum": 5256000
+                  "maximum": 5256000,
+                  "description": "Измеренный RTO в минутах."
                 }
               },
               "required": [],
-              "additionalProperties": false
+              "additionalProperties": false,
+              "description": "Обезличенные факты; пропущенный необходимый факт даёт unknown."
             }
           },
           "required": [
@@ -643,11 +744,13 @@
             "collected_at",
             "facts"
           ],
-          "additionalProperties": false
+          "additionalProperties": false,
+          "description": "Свидетельство для проверки REC-01."
         }
       },
       "required": [],
-      "additionalProperties": false
+      "additionalProperties": false,
+      "description": "Свидетельства по ID проверки; отсутствующая запись даёт not_run."
     }
   },
   "required": [
@@ -657,5 +760,6 @@
     "policy",
     "checks"
   ],
-  "additionalProperties": false
+  "additionalProperties": false,
+  "description": "Только типизированные обезличенные факты; реальные IP, токены и исходные выгрузки не допускаются. Источник не подтверждает независимую проверку."
 }

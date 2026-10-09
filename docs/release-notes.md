@@ -1,33 +1,38 @@
-# v0.1.0a1 — offline MVP prerelease
+# v0.1.0a2 — предварительный выпуск на русском языке
 
-Adds strict sanitized JSON evidence schema, ten offline posture rules, JSON/Markdown
-reports, pass/fail/unknown/not_run semantics, freshness/policy gates and private
-exclusive output creation. Synthetic safe/unsafe/missing fixtures and replayable
-examples are included. Zero runtime dependencies, hash-pinned setuptools build,
-wheel/source bundle with SHA256SUMS, synthetic unit/integration tests and CI.
+Все документы, пользовательские пояснения CLI, описания правил/схем, примеры и
+инструкции переведены на русский. Имена команд, пути, ключи JSON, статусы и ID
+сохранены. Версия пакета 0.1.0a2; предыдущий выпуск и tag v0.1.0a1 не меняются.
 
-Installation/run instructions are in [README](../README.md). Build/test instructions
-are in [environment](environment.md); real validation protocol is in [lab](lab.md).
-This document is prepared release content, not proof that a GitHub release exists.
+Автономный аудитор оценивает 10 направлений по обезличенным данным: порты/панели,
+SSH, firewall/IPv6, IAM/токены API, MFA/восстановление доступа, cloud-init/metadata,
+DNS/TLS, backup и измеренное восстановление. Закрытая схема, проверка актуальности,
+JSON/Markdown, pass/fail/unknown/not_run и безопасное создание файлов сохраняются.
+Неверные аргументы и содержимое входа не повторяются в диагностике.
 
-## Validation limits
-All local fixtures and test observations are synthetic. No real public ports/panels,
-SSH, cloud firewall/IPv6, provider IAM/tokens/MFA, cloud-init/metadata, DNS/TLS,
-backup or restore checks were performed. No provider adapters or network collectors.
-Actual platform validation needs a separate authorized disposable lab. No paid resources
-or real credentials used. Pass means only that supplied facts meet configured policy.
-Local validation: 17 unittest cases (with per-rule subcases), fresh wheel installation
-and source-bundle installation, identical repeated artifact checksums, documentation
-links, targeted public-data checks and gitleaks 8.24.3 (no leaks found).
-Remote CI and release publication must be confirmed from the actual run/release.
-Only Python 3.12 on POSIX is locally validated; versions 3.13+ are not independently tested.
+Инструкции: [README](../README.md), [среда](environment.md), [лаборатория](lab.md),
+[вход](input.md), [безопасность](../SECURITY.md), [изменения](../CHANGELOG.md).
+Этот файл — содержание notes; факт публикации подтверждается реальным release/API.
 
-## Confirmed GitHub CI before release
-For commit `d8ddb6a136a909a92ad381c7dad63b3416383a95`, both
+## Подтверждённая история 0.1.0a1
+Для `d8ddb6a136a909a92ad381c7dad63b3416383a95` успешны
 [push CI](https://github.com/mejustbox-byte/vps-opsec-auditor/actions/runs/37923541901)
-and [PR CI](https://github.com/mejustbox-byte/vps-opsec-auditor/actions/runs/37923547213)
-completed with **success**. The jobs include fresh setup from checkout, 17 offline
-unit/integration tests, docs/public-data checks, build, checksum-pinned gitleaks scan
-and clean wheel installation smoke. [PR #1](https://github.com/mejustbox-byte/vps-opsec-auditor/pull/1)
-is the only implementation PR. Follow-up commits must pass their own CI before merge;
-the release publication records the final merge/run identifiers.
+и [PR CI](https://github.com/mejustbox-byte/vps-opsec-auditor/actions/runs/37923547213).
+[PR #1](https://github.com/mejustbox-byte/vps-opsec-auditor/pull/1) реализовал MVP;
+[PR #2](https://github.com/mejustbox-byte/vps-opsec-auditor/pull/2) уточнил время/notes;
+[PR #3](https://github.com/mejustbox-byte/vps-opsec-auditor/pull/3) добавил выпуск через Actions.
+[Первый процесс выпуска](https://github.com/mejustbox-byte/vps-opsec-auditor/actions/runs/37925383868)
+успешен; 3 публичных assets скачаны и проверены, wheel установлен отдельно.
+Результаты CI 0.1.0a2 фиксируются после его фактического прохождения в notes выпуска.
+
+## Не выполненные реальные проверки
+Нет реальных наблюдений публичных портов/панелей, SSH, облачный firewall/IPv6,
+IAM провайдера/токены API/MFA, cloud-init/metadata, DNS/TLS, backup и restore/RPO/RTO.
+Реальные учётные данные, платные ресурсы и произвольные сканирования не использовались.
+Синтетические тесты не заменяют реальную лабораторию; pass относится к переданным
+фактам и политике владельца. Сетевые сборщики, исходные выгрузки, порядок/исходящие правила
+firewall отложены. Нужен отдельно разрешённый одноразовый стенд и частные данные.
+Выпуск остаётся предварительным; Python 3.12/POSIX подтверждены, Windows и другие
+версии Python независимо не проверялись.
+
+Корневой самостоятельный раздел: [RELEASE-NOTES.md](../RELEASE-NOTES.md).

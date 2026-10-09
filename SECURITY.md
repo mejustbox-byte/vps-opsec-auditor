@@ -1,19 +1,34 @@
-# Security boundaries
+# Безопасность и сообщения об уязвимостях
 
-This CLI never connects to networks or provider APIs and never changes infrastructure.
-It evaluates supplied sanitized evidence. A pass is not a security certification.
-Real provider validation is unperformed in the first prerelease candidate.
-Do not put real tokens, credentials, IPs, raw exports or reports in public git/issues/CI.
-Store private evidence outside this checkout and review aliases before sharing.
+## Поддерживаемые версии
+| Версия | Статус |
+| --- | --- |
+| 0.1.0a2 | Текущая ветка предварительной поддержки; проверки и исправления перед выпуском |
+| 0.1.0a1 | Сохранённый исторический prerelease; новые исправления выходят отдельной версией |
+| Стабильный выпуск | Пока отсутствует |
 
-Input has a closed schema and 1 MiB limit; unknown fields/types, duplicate JSON keys,
-NaN and invalid timestamps are rejected. Errors do not echo input values. Output
-files are new/exclusive and mode 0600. Standard output may be logged by your shell/CI;
-use an appropriate private output location for non-synthetic reports.
-Only POSIX/Python 3.12 is currently validated. No support for Windows file protections.
-Read-only is an infrastructure property, not a promise of zero local writes.
+Гарантированного SLA/срока исправления нет. Реальные проверки провайдеров не выполнены.
+Подтверждены Linux/POSIX и Python 3.12; Windows напрямую не поддерживается.
 
-Report security problems without secrets or identifiable infrastructure. There is
-no configured private reporting channel in this initial repository; do not disclose
-sensitive vulnerability evidence publicly. Contact the repository owner through an
-available private channel before sharing private details.
+## Сообщение о проблеме
+Не публикуйте секреты, реальные IP/аккаунты, raw exports или частные отчёты.
+Подготовьте версию/OS, минимальное синтетическое воспроизведение, ожидаемый/фактический
+результат и влияние. Отдельный частный канал безопасности пока не настроен;
+свяжитесь с владельцем через доступный частный канал до передачи чувствительных
+сведений. Не обещаем несуществующую почту, форму или private disclosure service.
+Безопасный синтетический дефект можно описать в issue; exploitation не требуется.
+
+## Границы продукта
+Автономный CLI не соединяется с сетью/API и не меняет инфраструктуру. Оцениваются
+переданные факты; pass не является сертификатом безопасности. 1 МиБ, обычные файлы,
+закрытая схема, точные типы/время, безопасные ошибки, O_EXCL и 0600 защищают вход/выход.
+Локальный файл записывается по запросу. Source/synthetic не доказывают истинность;
+скомпрометированный локальный user/root/диск остаётся за границами защиты.
+
+## Связанные обязательные разделы
+- [Границы доверия и угрозы](THREAT-MODEL.md), [полная матрица](docs/threat-model.md).
+- [Обработка, хранение и retention](EVIDENCE-POLICY.md): вне git, сроки владельца,
+  нет встроенного шифрования/автоудаления; stdout и aliases также чувствительны.
+- [Зависимости, лицензии и целостность](SUPPLY-CHAIN.md): хеши, MIT, ограниченные права.
+- [Security testing и НЕ ВЫПОЛНЕНО](SECURITY-TESTING.md): синтетика не заменяет live.
+- [Установка](INSTALL.md), [эксплуатация](RUNBOOK.md), [контроль выпуска](RELEASE-CHECKLIST.md).

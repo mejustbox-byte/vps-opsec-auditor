@@ -8,52 +8,52 @@
     {
       "check_id": "NET-01",
       "status": "unverified",
-      "reason": "Synthetic contract only; no provider lab or real observation."
+      "reason": "Только синтетический эскиз контракта; реальный стенд и наблюдения отсутствуют."
     },
     {
       "check_id": "SSH-01",
       "status": "unverified",
-      "reason": "Synthetic contract only; no provider lab or real observation."
+      "reason": "Только синтетический эскиз контракта; реальный стенд и наблюдения отсутствуют."
     },
     {
       "check_id": "FW-01",
       "status": "unverified",
-      "reason": "Synthetic contract only; no provider lab or real observation."
+      "reason": "Только синтетический эскиз контракта; реальный стенд и наблюдения отсутствуют."
     },
     {
       "check_id": "IAM-01",
       "status": "unverified",
-      "reason": "Synthetic contract only; no provider lab or real observation."
+      "reason": "Только синтетический эскиз контракта; реальный стенд и наблюдения отсутствуют."
     },
     {
       "check_id": "MFA-01",
       "status": "unverified",
-      "reason": "Synthetic contract only; no provider lab or real observation."
+      "reason": "Только синтетический эскиз контракта; реальный стенд и наблюдения отсутствуют."
     },
     {
       "check_id": "META-01",
       "status": "unverified",
-      "reason": "Synthetic contract only; no provider lab or real observation."
+      "reason": "Только синтетический эскиз контракта; реальный стенд и наблюдения отсутствуют."
     },
     {
       "check_id": "DNS-01",
       "status": "unverified",
-      "reason": "Synthetic contract only; no provider lab or real observation."
+      "reason": "Только синтетический эскиз контракта; реальный стенд и наблюдения отсутствуют."
     },
     {
       "check_id": "TLS-01",
       "status": "unverified",
-      "reason": "Synthetic contract only; no provider lab or real observation."
+      "reason": "Только синтетический эскиз контракта; реальный стенд и наблюдения отсутствуют."
     },
     {
       "check_id": "BAK-01",
       "status": "unverified",
-      "reason": "Synthetic contract only; no provider lab or real observation."
+      "reason": "Только синтетический эскиз контракта; реальный стенд и наблюдения отсутствуют."
     },
     {
       "check_id": "REC-01",
       "status": "unverified",
-      "reason": "Synthetic contract only; no provider lab or real observation."
+      "reason": "Только синтетический эскиз контракта; реальный стенд и наблюдения отсутствуют."
     }
   ]
 }

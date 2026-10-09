@@ -1,17 +1,26 @@
-# Implement offline VPS posture auditor MVP
+# Русская документация и предварительный выпуск 0.1.0a2
 
-The repository previously had no executable auditor. Add a Python CLI that evaluates
-sanitized evidence across ten VPS exposure and provider-control-plane checks, with
-pass/fail/unknown/not_run, evidence references, severity and remediation. Missing,
-stale and unsupported evidence remains visible; no network or provider calls run.
+Переведены README, документы, безопасность, участие, история изменений, пояснения
+правил/схем, справка CLI и отчёты. Команды, пути, ключи JSON, статусы и ID сохранены.
+Версия пакета 0.1.0a2; старый выпуск 0.1.0a1 и его tag не меняются.
 
-Includes a closed JSON Schema, safe bounded input/output handling, synthetic fixtures,
-JSON/Markdown reports, design/security/lab documentation, hash-pinned build tooling,
-reproducible wheel/source artifacts and CI with gitleaks and clean-install smoke tests.
+Добавлены самостоятельные корневые документы с полным индексом, моделью угроз,
+контрактами CLI/JSON/Python, эксплуатацией, лабораторией и контролем выпуска.
+Расширены SECURITY, политика свидетельств, инвентаризация цепочки поставок и
+проверки безопасности; AGENTS задаёт правила последующих циклов. Стандартный MIT
+сохранён в LICENSE, перевод — LICENSE.ru.md; включение обеих лицензий проверяется
+в wheel/исходном архиве и CI.
 
-Validation: 17 unit/integration test cases with per-rule subcases, all passing;
-fresh wheel/source installs and installed CLI smoke; matching repeated artifact
-checksums; docs/public-data checks and gitleaks without detected leaks.
-Real provider, network, cloud-init/metadata, backup and recovery labs were not run.
-First release must remain prerelease (v0.1.0a1); pass means supplied-evidence compliance,
-not independently verified infrastructure security. No paid resources or real credentials used.
+Добавлены проверки русского вывода и отсутствия раскрытия неверных аргументов.
+Сборка читает версию из pyproject.toml. Выпуск через Actions принимает точный commit
+и ID нового существующего draft; сборка только чтение, публикация — contents:write.
+Используется штатный GITHUB_TOKEN без новых учётных данных.
+
+Локально прошли 19 тестов, setup без сохранённого venv, чистая установка wheel,
+проверки ссылок/данных/лицензий, одинаковые SHA256 двух сборок, gitleaks и 13 сценариев
+защиты выпуска. Перед слиянием обязателен успешный PR CI.
+После слияния проверяется main, создаётся новый tag и prerelease с 3 assets/SHA256SUMS.
+Реальные провайдерские, сетевые, metadata и backup/restore лаборатории не выполнялись;
+синтетический pass означает соответствие данных правилу, а не доказанную безопасность.
+
+Корневой самостоятельный раздел: [CONTRIBUTING.md](../CONTRIBUTING.md).
